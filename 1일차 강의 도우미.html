@@ -1,0 +1,1160 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>업무자동화 강의 도우미</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+KR:wght@500;600;700&family=Noto+Sans+KR:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* 레이아웃: 왼쪽 노선도(모듈 · 단계 · 실습 도구 바로가기) + 오른쪽 본문.
+   교안 슬라이드의 종이색 · 남색 · 주황을 그대로 쓴다. 남색 블록 = 복사해서 쓰는 요청문. */
+:root{
+  --paper:#f4f2ec; --card:#fcfbf8; --shelf:#e7e3d9; --line:#d9d5ca;
+  --ink:#17212b; --ink-2:#46525e; --ink-3:#5f6973;
+  --accent:#b8400c; --accent-tint:#f6e2d5;
+  --blue:#2a6592; --blue-tint:#deeaf3;
+  --ok:#2c6a4c; --ok-tint:#dcebe2;
+  --strong:#17212b; --on-strong:#f1eee7;
+  --navy:#17212b; --navy-line:#33445a; --navy-wash:rgba(241,238,231,.09);
+  --on-navy:#ece9e1; --on-navy-2:#a9b6c2; --on-navy-accent:#f29a6b;
+  --t-gemini:#2a6592; --t-studio:#b8400c; --t-notebook:#2c6a4c; --on-tile:#fcfbf8;
+  --shadow:0 14px 36px rgba(23,33,43,.2);
+  --f-display:'IBM Plex Sans KR','Apple SD Gothic Neo','Malgun Gothic',sans-serif;
+  --f-body:'Noto Sans KR','Apple SD Gothic Neo','Malgun Gothic',system-ui,sans-serif;
+  --f-mono:'JetBrains Mono',Menlo,Consolas,'D2Coding',monospace;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --paper:#10171f; --card:#18222c; --shelf:#212d3a; --line:#2e3c4b;
+    --ink:#ece9e1; --ink-2:#b6c1cc; --ink-3:#909ca8;
+    --accent:#f29a6b; --accent-tint:#3a271c;
+    --blue:#8fc0e6; --blue-tint:#1b2c3c;
+    --ok:#86cfa7; --ok-tint:#1a2f25;
+    --strong:#2b3d52; --on-strong:#f1eee7;
+    --navy:#0a1017; --navy-line:#2e3c4b;
+    --shadow:0 14px 36px rgba(0,0,0,.5);
+    color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --paper:#10171f; --card:#18222c; --shelf:#212d3a; --line:#2e3c4b;
+  --ink:#ece9e1; --ink-2:#b6c1cc; --ink-3:#909ca8;
+  --accent:#f29a6b; --accent-tint:#3a271c;
+  --blue:#8fc0e6; --blue-tint:#1b2c3c;
+  --ok:#86cfa7; --ok-tint:#1a2f25;
+  --strong:#2b3d52; --on-strong:#f1eee7;
+  --navy:#0a1017; --navy-line:#2e3c4b;
+  --shadow:0 14px 36px rgba(0,0,0,.5);
+  color-scheme:dark;
+}
+
+*,*::before,*::after{box-sizing:border-box}
+[hidden]{display:none!important}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--f-body);font-size:15.5px;line-height:1.7;-webkit-text-size-adjust:100%;word-break:keep-all;overflow-wrap:break-word}
+h1,h2,h3,h4,p,ul,ol{margin:0}
+button,input,textarea{font:inherit;color:inherit}
+a{color:inherit}
+:focus-visible{outline:2.5px solid var(--accent);outline-offset:2px;border-radius:6px}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap}
+code{font-family:var(--f-mono);font-size:.88em;background:var(--shelf);padding:.1em .4em;border-radius:5px;overflow-wrap:anywhere;word-break:normal}
+
+/* ── 틀 ── */
+.app{display:grid;grid-template-columns:284px minmax(0,1fr);align-items:start}
+.rail{position:sticky;top:env(safe-area-inset-top,0px);height:100vh;overflow-y:auto;display:flex;flex-direction:column;gap:18px;padding:22px 14px 0;border-right:1px solid var(--line);background:var(--paper);z-index:20}
+.main{min-width:0;padding-block:0 96px;padding-inline:clamp(16px,4vw,56px)}
+.col{max-width:820px}
+
+/* ── 왼쪽: 이름 · 노선도 · 도구 ── */
+.brand{display:flex;flex-direction:column;gap:2px;padding:0 8px;text-decoration:none;line-height:1.3}
+.brand small{font-size:11.5px;font-weight:600;color:var(--accent)}
+.brand strong{font-family:var(--f-display);font-size:21px;font-weight:700}
+.nav,.route{display:flex;flex-direction:column;gap:2px}
+.nav{gap:8px}
+.nav-btn{display:flex;align-items:center;gap:12px;padding:9px 12px;border-radius:10px;color:var(--ink-2);font-size:14.5px;font-weight:500;text-decoration:none;line-height:1.3}
+.nav-btn:hover{background:var(--shelf)}
+.nav-btn[aria-current="page"]{background:var(--strong);color:var(--on-strong)}
+.route{position:relative;padding-block:2px}
+.route::before{content:"";position:absolute;left:17px;top:24px;bottom:24px;width:2px;background:var(--line)}
+.stop .dot{position:relative;flex:none;width:12px;height:12px;border-radius:50%;background:var(--paper);border:2.5px solid var(--accent)}
+.stop[aria-current="page"] .dot{background:var(--on-navy-accent);border-color:var(--on-strong)}
+.stop .st{display:flex;flex-direction:column;min-width:0;flex:1}
+.stop small{font-size:11px;font-weight:600;letter-spacing:.06em;color:var(--accent)}
+.stop[aria-current="page"] small{color:var(--on-navy-accent)}
+.cnt{flex:none;font-size:12px;font-variant-numeric:tabular-nums;color:var(--ink-3)}
+.stop[aria-current="page"] .cnt{color:var(--on-navy-2)}
+.sub-nav{position:relative;display:flex;flex-direction:column;gap:1px;padding:4px 0 8px 30px}
+.sg{padding:8px 8px 2px;font-size:11.5px;font-weight:700;color:var(--ink-3)}
+.sl{display:grid;grid-template-columns:14px minmax(0,1fr);gap:8px;align-items:start;padding:5px 8px;border-radius:8px;font-size:13.5px;line-height:1.45;color:var(--ink-2);text-decoration:none}
+.sl:hover{background:var(--shelf)}
+.sl.cur{color:var(--ink);font-weight:600;background:var(--shelf)}
+.ck{width:12px;height:12px;margin-top:5px;border-radius:50%;border:1.5px solid var(--ink-3)}
+.sl.ok .ck{border-color:var(--ok);background:var(--ok)}
+.dock{margin-top:auto;position:sticky;bottom:0;display:flex;flex-direction:column;gap:6px;padding:12px 0 calc(16px + env(safe-area-inset-bottom,0px));background:var(--paper);border-top:1px solid var(--line)}
+.dock-h{padding:0 4px;font-size:11.5px;font-weight:700;letter-spacing:.06em;color:var(--ink-3)}
+.lbl-short{display:none}
+
+/* ── 바로가기 버튼 ── */
+.launch{display:flex;flex-wrap:wrap;gap:8px}
+.go{display:inline-flex;align-items:center;gap:9px;padding:7px 12px 7px 14px;border:1.5px solid var(--line);border-radius:10px;background:var(--card);font-size:14px;font-weight:600;line-height:1.3;text-decoration:none;white-space:nowrap}
+.go b{font-weight:500;color:var(--ink-3)}
+.go:hover{border-color:var(--accent)}
+.go.pri{padding-left:7px;background:var(--strong);border-color:var(--strong);color:var(--on-strong)}
+.go.pri b{color:var(--on-navy-2)}
+.go.pri:hover{border-color:var(--on-navy-accent)}
+.go.pri.plain{padding-left:14px}
+.mono{flex:none;display:grid;place-items:center;width:28px;height:28px;border-radius:7px;font-family:var(--f-display);font-style:normal;font-size:12px;font-weight:700;color:var(--on-tile)}
+.mono.gemini{background:var(--t-gemini)} .mono.studio{background:var(--t-studio)} .mono.notebook{background:var(--t-notebook)}
+.dock .go{justify-content:flex-start}
+.dock .go b{margin-left:auto}
+
+/* ── 본문 머리 ── */
+.sec-head{display:flex;flex-direction:column;gap:12px;padding-block:36px 28px}
+.eb{font-size:12.5px;font-weight:700;letter-spacing:.08em;color:var(--accent)}
+.sec-head h1{font-family:var(--f-display);font-size:clamp(27px,4.2vw,37px);font-weight:700;line-height:1.22;letter-spacing:-.01em;text-wrap:balance}
+.lead{font-size:17px;color:var(--ink-2);max-width:38em}
+.out{display:grid;grid-template-columns:auto minmax(0,1fr);gap:4px 14px;align-items:baseline;padding:14px 18px;border-radius:12px;background:var(--shelf)}
+.out-h{font-size:12.5px;font-weight:700;color:var(--ink-3)}
+.out div{display:flex;flex-direction:column}
+.out strong{font-family:var(--f-display);font-size:16.5px;line-height:1.45}
+.out span{font-size:14px;color:var(--ink-2)}
+.prog{display:flex;align-items:center;gap:12px;font-size:13px;color:var(--ink-3);font-variant-numeric:tabular-nums}
+.prog-bar{flex:1;max-width:260px;height:6px;border-radius:3px;background:var(--shelf);overflow:hidden}
+.prog-bar i{display:block;height:100%;width:0;background:var(--ok);border-radius:3px;transition:width .25s ease}
+.toc{display:none;list-style:none;padding:0;flex-wrap:wrap;gap:6px}
+.toc a{display:inline-flex;align-items:center;gap:6px;padding:5px 11px;border:1px solid var(--line);border-radius:999px;background:var(--card);font-size:13px;text-decoration:none;line-height:1.35}
+.toc a.ok{border-color:var(--ok);color:var(--ok)}
+
+/* ── 단계 ── */
+.stage{display:flex;flex-wrap:wrap;align-items:center;gap:8px 16px;margin-top:20px;padding:12px 14px 12px 18px;border-radius:12px;background:var(--strong);color:var(--on-strong)}
+.stage-t{display:flex;flex-direction:column;margin-right:auto;line-height:1.35}
+.stage-t small{font-size:12px;font-weight:700;letter-spacing:.06em;color:var(--on-navy-accent)}
+.stage-t strong{font-family:var(--f-display);font-size:17px}
+.stage .go{background:var(--navy-wash);border-color:var(--navy-line);color:var(--on-strong)}
+.stage .go b{color:var(--on-navy-2)}
+.step{display:flex;flex-direction:column;gap:16px;padding-block:30px;border-top:1px solid var(--line);scroll-margin-top:16px}
+.stage + .step{border-top:0}
+.step:focus{outline:none}
+.step-head{display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:14px;align-items:start}
+.num{display:grid;place-items:center;width:34px;height:34px;margin-top:2px;border-radius:50%;background:var(--strong);color:var(--on-strong);font-family:var(--f-display);font-size:15px;font-weight:700;font-variant-numeric:tabular-nums}
+.step.is-done .num{background:var(--ok);color:var(--paper)}
+.step-t{display:flex;flex-direction:column;gap:2px;min-width:0}
+.step-t h2{font-family:var(--f-display);font-size:22px;font-weight:700;line-height:1.32;text-wrap:balance}
+.done{display:inline-flex;align-items:center;gap:6px;margin-top:3px;padding:5px 12px;border:1.5px solid var(--line);border-radius:999px;background:var(--card);font-size:13px;font-weight:600;color:var(--ink-2);cursor:pointer;white-space:nowrap;user-select:none}
+.done::before{content:"";width:11px;height:11px;border-radius:50%;border:1.5px solid var(--ink-3)}
+.done:hover{border-color:var(--ok)}
+.step.is-done .done{background:var(--ok-tint);border-color:var(--ok);color:var(--ok)}
+.step.is-done .done::before{background:var(--ok);border-color:var(--ok)}
+.done:has(input:focus-visible){outline:2.5px solid var(--accent);outline-offset:2px}
+.step p{max-width:44em}
+h3.sub{font-family:var(--f-display);font-size:16px;font-weight:700;line-height:1.4}
+.muted{font-size:13.5px;color:var(--ink-3)}
+.grp{display:flex;flex-direction:column;gap:8px;min-width:0}
+
+/* ── 요청문 ── */
+.prompt{border:1px solid var(--navy-line);border-radius:12px;background:var(--navy);color:var(--on-navy);overflow:hidden}
+.p-head{display:flex;flex-wrap:wrap;align-items:center;gap:4px 10px;padding:9px 10px 9px 18px;border-bottom:1px solid var(--navy-line)}
+.p-label{font-size:12px;font-weight:700;letter-spacing:.08em;color:var(--on-navy-accent)}
+.p-title{font-size:14px;font-weight:600}
+.p-to{margin-left:auto;font-size:12.5px;color:var(--on-navy-2)}
+.p-copy{border:1px solid var(--navy-line);border-radius:8px;background:var(--navy-wash);color:var(--on-navy);padding:4px 14px;font-size:13px;font-weight:600;cursor:pointer;white-space:nowrap}
+.p-copy:hover{border-color:var(--on-navy-accent)}
+.p-copy.did{background:var(--on-navy-accent);border-color:var(--on-navy-accent);color:var(--navy)}
+.p-text{padding:15px 18px 17px;font-size:15px;line-height:1.75;white-space:pre-wrap;overflow-wrap:anywhere}
+.p-text.clip{max-height:19.5em;overflow-y:auto}
+.p-foot{display:flex;justify-content:center;padding:6px;border-top:1px solid var(--navy-line)}
+.p-foot button{border:0;background:none;color:var(--on-navy-2);font-size:13px;cursor:pointer;padding:2px 12px}
+.p-foot button:hover{color:var(--on-navy)}
+.slot{min-width:5ch;max-width:100%;padding:0 6px;border:0;border-bottom:1.5px dashed var(--on-navy-accent);border-radius:4px 4px 0 0;background:var(--navy-wash);color:var(--on-navy);line-height:1.5}
+.slot::placeholder{color:var(--on-navy-accent);opacity:1}
+.prompts{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:12px;align-items:start}
+.prompts .prompt{min-width:0}
+
+/* ── 알림 · 카드 · 흐름 · 표 ── */
+.note{display:grid;grid-template-columns:auto minmax(0,1fr);gap:4px 12px;align-items:baseline;padding:12px 16px;border-radius:12px;max-width:46em;font-size:15px}
+.note b.tag{font-size:12px;font-weight:700;letter-spacing:.06em}
+.note.check{background:var(--ok-tint)} .note.check b.tag{color:var(--ok)}
+.note.warn{background:var(--accent-tint)} .note.warn b.tag{color:var(--accent)}
+.note.tip{background:var(--blue-tint)} .note.tip b.tag{color:var(--blue)}
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px}
+.card{display:flex;flex-direction:column;gap:4px;min-width:0;padding:15px 16px;border:1px solid var(--line);border-radius:12px;background:var(--card);text-decoration:none}
+.card strong{font-family:var(--f-display);font-size:16px;line-height:1.4}
+.card span{font-size:14px;color:var(--ink-2);line-height:1.6}
+.card .tag{font-size:12px;font-weight:700;color:var(--accent)}
+.card em{font-style:normal;font-size:13.5px;font-weight:600}
+a.card:hover{border-color:var(--accent)}
+.card .more{margin-top:auto;padding-top:6px;font-size:12.5px;font-weight:600;color:var(--blue)}
+.flow{display:flex;flex-wrap:wrap;align-items:stretch;gap:6px}
+.node{flex:1 1 120px;display:flex;flex-direction:column;justify-content:center;gap:2px;min-width:0;padding:12px 14px;border:1px solid var(--line);border-radius:12px;background:var(--card);line-height:1.4}
+.node small{font-size:11.5px;font-weight:700;color:var(--accent)}
+.node strong{font-family:var(--f-display);font-size:15px}
+.node span{font-size:13px;color:var(--ink-2)}
+.node.end{background:var(--shelf)}
+.edge{flex:0 0 auto;align-self:center;color:var(--accent);font-weight:700}
+.edge::before{content:"→"}
+.chips{display:flex;flex-wrap:wrap;align-items:center;gap:6px}
+.chips-h{margin-right:4px;font-size:13px;font-weight:700;color:var(--ink-3)}
+.chip{padding:3px 12px;border:1px solid var(--line);border-radius:999px;background:var(--card);font-size:13.5px}
+.tbl{border:1px solid var(--line);border-radius:12px;background:var(--card);overflow-x:auto}
+table{border-collapse:collapse;width:100%;font-size:14.5px;line-height:1.55}
+th,td{padding:10px 14px;text-align:left;vertical-align:top;border-bottom:1px solid var(--line)}
+th{font-size:12.5px;font-weight:700;color:var(--ink-2);background:var(--shelf);white-space:nowrap}
+tr:last-child td{border-bottom:0}
+td.c,th.c{text-align:center;width:1%;white-space:nowrap}
+td .copy{float:right;margin:0 0 4px 10px}
+.cols{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:20px;align-items:start}
+ol.steps,ul.dots{list-style:none;padding:0;display:flex;flex-direction:column;gap:8px;max-width:46em}
+ol.steps li{display:grid;grid-template-columns:26px minmax(0,1fr);gap:10px;align-items:start}
+ol.steps li>b{display:grid;place-items:center;width:24px;height:24px;margin-top:2px;border-radius:50%;border:1.5px solid var(--ink-3);font-family:var(--f-display);font-size:12.5px;font-variant-numeric:tabular-nums}
+ul.dots li{display:grid;grid-template-columns:14px minmax(0,1fr);gap:8px}
+ul.dots li::before{content:"";width:6px;height:6px;margin-top:11px;border-radius:50%;background:var(--ink-3)}
+.url{display:block;padding:10px 14px;border-radius:10px;font-size:13px;line-height:1.6}
+.copy,.btn{border:1px solid var(--line);border-radius:8px;background:var(--shelf);padding:4px 12px;font-size:13px;font-weight:600;color:var(--ink-2);cursor:pointer;white-space:nowrap}
+.copy:hover,.btn:hover{border-color:var(--accent);color:var(--ink)}
+.copy.did{border-color:var(--ok);color:var(--ok)}
+.pairs{display:flex;flex-direction:column;gap:8px}
+.pair{display:grid;grid-template-columns:minmax(0,.7fr) 24px minmax(0,1.3fr);gap:10px;align-items:center}
+.pairs-h{font-size:12.5px;font-weight:700;color:var(--ink-3)}
+.bad{padding:10px 14px;border:1px dashed var(--ink-3);border-radius:10px;color:var(--ink-3);font-size:14.5px}
+.arr{text-align:center;color:var(--accent);font-weight:700} .arr::before{content:"→"}
+.good{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:10px;align-items:center;padding:10px 10px 10px 14px;border:1px solid var(--line);border-radius:10px;background:var(--card);font-size:14.5px}
+
+/* ── 체크 ── */
+ul.checks{list-style:none;padding:0;display:flex;flex-direction:column;gap:8px;max-width:46em}
+.checks label{display:grid;grid-template-columns:22px minmax(0,1fr);gap:10px;align-items:start;padding:11px 14px;border:1px solid var(--line);border-radius:12px;background:var(--card);cursor:pointer}
+.checks label:has(input:checked){border-color:var(--ok);background:var(--ok-tint)}
+input[type="checkbox"]{width:18px;height:18px;margin:4px 0 0;accent-color:var(--ok)}
+td.c input[type="checkbox"]{margin:2px 0 0}
+.checks b{font-weight:600}
+.checks span span{display:block;font-size:14px;color:var(--ink-2)}
+
+/* ── 화면 구성 스케치 ── */
+.wire{display:flex;flex-direction:column;gap:8px;padding:14px;border:1px solid var(--line);border-radius:12px;background:var(--card);max-width:520px}
+.w-row{display:grid;grid-template-columns:22px repeat(var(--n),minmax(0,1fr));gap:8px;align-items:stretch}
+.w-n{display:grid;place-items:center;align-self:center;width:22px;height:22px;border-radius:50%;background:var(--accent);color:var(--paper);font-style:normal;font-size:12px;font-weight:700}
+.w-box{display:grid;place-items:center;min-width:0;padding:8px 6px;border:1px dashed var(--ink-3);border-radius:8px;font-size:13px;color:var(--ink-2);text-align:center;line-height:1.35}
+.w-box.kpi{border-style:solid;background:var(--shelf);font-weight:600}
+.w-box.pane{min-height:64px}
+
+/* ── 입력 위젯 ── */
+.rss,.mine{display:flex;flex-direction:column;gap:12px;padding:16px 18px;border:1px solid var(--line);border-radius:12px;background:var(--card)}
+.rss-row{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.rss label,.mine label{font-size:13px;font-weight:700;color:var(--ink-2)}
+.field{flex:1 1 180px;min-width:0;padding:7px 12px;border:1.5px solid var(--line);border-radius:10px;background:var(--paper);font-size:15px;font-weight:400;color:var(--ink)}
+.field::placeholder{color:var(--ink-3)}
+.kw{border:1px solid var(--line);border-radius:999px;background:var(--paper);padding:3px 12px;font-size:13.5px;cursor:pointer}
+.kw:hover{border-color:var(--accent)}
+.go[aria-disabled="true"]{opacity:.45;pointer-events:none}
+.mine-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.mine-grid label{display:flex;flex-direction:column;gap:4px;min-width:0}
+.mine-grid .wide{grid-column:1/-1}
+.mine textarea{resize:vertical;line-height:1.6}
+.act{display:flex;flex-wrap:wrap;align-items:center;gap:8px 14px}
+
+/* ── 시작 화면 ── */
+.tools{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px}
+.tool{display:flex;flex-direction:column;gap:10px;min-width:0;padding:18px;border:1px solid var(--line);border-radius:14px;background:var(--card)}
+.tool-h{display:flex;align-items:center;gap:10px}
+.tool-h .mono{width:36px;height:36px;border-radius:9px;font-size:14px}
+.tool-h strong{font-family:var(--f-display);font-size:18px;line-height:1.3}
+.tool-meta{display:flex;flex-direction:column;gap:2px;font-size:14px;color:var(--ink-2);line-height:1.55}
+.tool-meta code{align-self:flex-start}
+.tool-meta small{font-size:12.5px;font-weight:600;color:var(--accent)}
+.tool .go{align-self:flex-start;margin-top:auto}
+.tool-ok{display:flex;align-items:center;gap:8px;font-size:13.5px;color:var(--ink-2);cursor:pointer}
+.tool-ok input{margin:0}
+.block{display:flex;flex-direction:column;gap:14px;padding-block:28px;border-top:1px solid var(--line)}
+.block>h2{font-family:var(--f-display);font-size:21px;font-weight:700;line-height:1.35}
+.pager{display:flex;justify-content:space-between;gap:12px;padding-top:24px;border-top:1px solid var(--line)}
+.pager a{display:flex;flex-direction:column;max-width:48%;padding:10px 16px;border:1px solid var(--line);border-radius:12px;background:var(--card);font-weight:600;text-decoration:none;line-height:1.4}
+.pager a small{font-size:11.5px;font-weight:600;color:var(--ink-3)}
+.pager a:hover{border-color:var(--accent)}
+.pager .next{margin-left:auto;text-align:right}
+
+/* ── 알림창 ── */
+.toast{position:fixed;left:50%;bottom:calc(22px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);display:flex;align-items:center;gap:12px;max-width:min(560px,calc(100vw - 32px));padding:10px 12px 10px 18px;border-radius:12px;background:var(--strong);color:var(--on-strong);box-shadow:var(--shadow);font-size:14px;line-height:1.5;z-index:60}
+.toast .go{background:var(--navy-wash);border-color:var(--navy-line);color:var(--on-strong);padding:5px 10px 5px 6px;font-size:13px}
+.toast .go b{color:var(--on-navy-2)}
+
+/* ── 화면이 좁을 때 ── */
+@media (max-width:860px){
+  .app{grid-template-columns:minmax(0,1fr)}
+  .rail{height:auto;overflow:visible;gap:8px;padding:10px 16px;border-right:0;border-bottom:1px solid var(--line)}
+  .brand{flex-direction:row;align-items:baseline;gap:8px;padding:0}
+  .brand strong{font-size:17px} .brand small{font-size:10.5px}
+  .nav{flex-direction:row;gap:6px;overflow-x:auto;margin-inline:-16px;padding-inline:16px;scrollbar-width:none}
+  .nav::-webkit-scrollbar{display:none}
+  .route{flex-direction:row;gap:6px;padding:0}
+  .route::before,.stop .dot,.sub-nav{display:none}
+  .nav-btn{flex:0 0 auto;padding:6px 12px;border:1px solid var(--line);border-radius:999px;background:var(--card);font-size:13.5px;white-space:nowrap}
+  .stop .st{flex-direction:row;gap:6px;align-items:baseline}
+  .dock{position:fixed;left:0;right:0;bottom:0;flex-direction:row;gap:6px;margin:0;padding:8px 16px calc(8px + env(safe-area-inset-bottom,0px));z-index:40}
+  .dock-h{display:none}
+  .dock .go{flex:1 1 0;min-width:0;justify-content:center;gap:6px;padding:6px 8px 6px 6px;font-size:12.5px;overflow:hidden}
+  .dock .go b{display:none}
+  .dock .mono{width:24px;height:24px;font-size:11px}
+  .dock .lbl-full{display:none} .dock .lbl-short{display:inline}
+  .main{padding-block:0 132px}
+  .toc{display:flex}
+  .step{scroll-margin-top:104px}
+  .toast{bottom:calc(72px + env(safe-area-inset-bottom,0px))}
+  .flow{flex-direction:column}
+  .node{flex:0 0 auto}
+  .edge::before{content:"↓"}
+  .pair{grid-template-columns:minmax(0,1fr);gap:4px}
+  .pair.pairs-h{display:none}
+  .arr::before{content:"↓"}
+  .mine-grid{grid-template-columns:minmax(0,1fr)}
+  .pager a{max-width:none;flex:1}
+}
+@media (max-width:520px){
+  .step-head{grid-template-columns:auto minmax(0,1fr)}
+  .done{grid-column:2;justify-self:start}
+  .p-to{margin-left:0;flex-basis:100%;order:3}
+  .p-copy{margin-left:auto}
+}
+@media (prefers-reduced-motion:reduce){
+  html{scroll-behavior:auto}
+  .prog-bar i{transition:none}
+}
+</style>
+
+<div class="app">
+  <div class="rail">
+    <a class="brand" href="#start"><small>바이브코딩으로 시작하는 업무자동화</small><strong>강의 도우미</strong></a>
+    <nav class="nav" id="nav" aria-label="모듈"></nav>
+    <div class="dock" id="dock" aria-label="실습 도구 바로가기"></div>
+  </div>
+  <main class="main"><div class="col" id="views"></div></main>
+</div>
+<div class="toast" id="toast" role="status" aria-live="polite" hidden></div>
+
+<script>
+(function(){
+'use strict';
+const R = String.raw;
+
+/* ── 실습 도구 ── */
+const TOOLS = {
+  gemini:  {label:'Gemini 바로가기', short:'Gemini', name:'Gemini', mono:'G', url:'https://gemini.google.com/app'},
+  studio:  {label:'AI Studio 바로가기', short:'AI Studio', name:'AI Studio', mono:'AI', url:'https://aistudio.google.com/apps'},
+  notebook:{label:'Gemini Notebook 바로가기', short:'Notebook', name:'Gemini Notebook', mono:'NB', url:'https://notebooklm.google.com/'},
+  calendar:{label:'Calendar 열기', url:'https://calendar.google.com/'},
+  gmail:   {label:'Gmail 열기', url:'https://mail.google.com/'},
+  drive:   {label:'Drive 열기', url:'https://drive.google.com/'},
+  docs:    {label:'Google Docs 열기', url:'https://docs.google.com/document/'},
+  sheets:  {label:'Google Sheets 열기', url:'https://docs.google.com/spreadsheets/'},
+  chatgpt: {label:'ChatGPT 열기', url:'https://chatgpt.com/'},
+  claude:  {label:'Claude 열기', url:'https://claude.ai/'}
+};
+
+/* ── 모듈 ④ 대시보드 요청문 (교안 요청문 1/4 ~ 4/4 전문) ── */
+const P_DATA_RULES = R`[데이터 원칙 - 가장 중요]
+- 가짜 기사, 예시 기사, 샘플 데이터를 절대 만들지 않는다. 오류 대비용 기본 데이터도 넣지 않는다.
+- RSS 요청이 실패하면 상태 코드와 오류 메시지를 화면에 그대로 보여준다.
+- 검색 결과가 0건이면 "검색 결과 없음"이라고만 표시한다.
+- 화면 상단에 연결 상태를 항상 표시한다: "구글 뉴스 연결됨 · 마지막 수집 시각 HH:MM" 또는 "연결 실패".`;
+
+const P_NEWS = R`구글 뉴스 RSS로 산업 뉴스를 모아 보여주는 '산업 뉴스 대시보드' 웹앱을 만들어줘.
+
+[구조 - 반드시 지킬 것]
+- 서버(백엔드)가 포함된 풀스택 앱으로 만든다.
+- 뉴스는 서버에서 구글 뉴스 RSS를 받아 온다. API 키는 쓰지 않는다.
+  https://news.google.com/rss/search?q={키워드}+when:7d&hl=ko&gl=KR&ceid=KR:ko
+  (키워드는 URL 인코딩한다)
+- 브라우저 코드에서 구글 뉴스 RSS를 직접 호출하지 않는다.
+- 서버 API는 /api/news?query=키워드 하나만 만든다. 서버가 RSS(XML)를 파싱해 JSON으로 돌려준다.
+- 같은 키워드 결과는 서버에서 10분간 캐시하고, 캐시가 있으면 RSS를 다시 요청하지 않는다.
+- 임의의 URL을 대신 요청해 주는 중계 기능은 만들지 않는다.
+
+` + P_DATA_RULES + R`
+
+[데이터 처리]
+- 각 item에서 title, link, pubDate, source를 사용한다.
+  source는 언론사 이름이고, source의 url 속성은 언론사 홈페이지 주소다.
+- title 끝에 붙는 " - 언론사명"은 떼어 내고 언론사 이름은 따로 표시한다.
+- description은 HTML 링크 목록이라 쓰지 않는다.
+- pubDate는 한국 시간으로 바꿔 "10월 1일 14:30" 형식으로 표시한다.
+- link는 구글 뉴스 중계 주소이므로 그대로 쓰고, 클릭하면 새 탭에서 열리게 한다.
+
+[기능]
+1. 관심 키워드 여러 개 등록·삭제 (기본값: 강관, 유정용 강관, 철강 관세, 열연 가격)
+   등록한 키워드는 브라우저에 저장해 새로고침해도 유지한다.
+2. '뉴스 수집' 버튼: 누르면 모든 키워드를 수집한다. 앱을 열 때 자동으로 한 번 수집한다.
+3. 중복 제거: link가 같거나 제목이 매우 비슷한 기사는 하나로 묶고 "유사 기사 N건"을 표시한다.
+   펼치면 묶인 기사들의 제목과 언론사를 볼 수 있게 한다.
+4. 추천 점수: 아래 세 가지를 합산해 높은 순으로 정렬하고, 카드에 점수와 근거를 함께 표시한다.
+   - 키워드 점수: 제목에 포함된 등록 키워드 수
+   - 최신성 점수: 발행 시각이 최근일수록 높게
+   - 화제성 점수: 유사 기사 수가 많을수록 높게 (여러 언론이 보도한 이슈)
+   예) "키워드 2개 일치 +20 · 3시간 전 +15 · 유사 기사 4건 +12 = 47점"
+5. 기사 카드: 제목, 언론사, 발행 시각, 일치한 키워드 태그, 추천 점수와 근거, '원문 보기' 링크
+6. 필터: 기간(오늘·3일·7일), 키워드별 보기, 언론사 검색
+7. 기사 선택 체크박스와 "선택 N건" 표시
+8. 선택한 기사의 '제목 - 언론사 - 링크' 목록을 한 번에 복사하는 버튼.
+   복사되면 "N건 복사됨" 알림을 띄운다.
+
+[화면]
+- 상단: 앱 제목, 연결 상태, 마지막 수집 시각, '뉴스 수집' 버튼
+- 그 아래: 키워드 칩(추가 입력창, 칩마다 삭제 버튼)
+- 좌측: 필터 영역
+- 우측: 기사 카드 목록, 맨 아래에 선택 기사 복사 바 고정
+- 깔끔한 업무용 디자인, 모든 텍스트는 한국어`;
+
+/* ── 교안 내용. 단계 제목(title)은 교안 슬라이드 제목과 같다. {{이름}} = 수강생이 채우는 빈칸 ── */
+const MODS = [
+{id:'m1', eb:'모듈 ①', nav:'업무 비서 활용', title:'제미나이를 나의 자비스처럼', lead:'일정·메일·문서 업무자동화',
+ out:'상황별 업무 비서 프롬프트', outNote:'Google 일정·메일·문서를 연계하여 업무를 처리하는 요청문 모음', tools:['gemini'],
+ steps:[
+  {id:'m1-apps', eb:'연결', title:'Gemini와 연결되는 Google 앱', tools:['gemini'], blocks:[
+    {t:'cards', items:[
+      {h:'Gmail · Docs · Drive', x:'정보 검색, 질의 응답, 요약'},
+      {h:'Calendar', x:'일정 조회, 생성, 관리'},
+      {h:'Keep · Tasks', x:'메모·목록 작성, 할 일 추가·수정'}]},
+    {t:'cols', items:[
+      {t:'ol', h:'연결 방법', items:[
+        'Workspace와 동일한 계정으로 Gemini 앱에 로그인합니다.',
+        '메일·문서·일정 조회를 요청하면 연결 안내가 표시됩니다.',
+        '입력창에 <code>@</code>을 입력하여 사용할 서비스를 지정합니다.']},
+      {t:'ul', h:'지원되지 않는 작업', items:[
+        'Docs·Gmail의 댓글 및 이미지 열람',
+        'Drive 폴더 생성, 파일 이동',
+        '메일·파일 개수 집계, 잔여 저장 용량 확인']}]}
+  ]},
+  {id:'m1-formula', eb:'요청문', title:'요청문 구성', tools:['gemini'], blocks:[
+    {t:'cards', items:[
+      {h:'대상', em:'조회할 앱과 범위', x:'@Gmail, 기간, 발신자, 키워드'},
+      {h:'요청 작업', em:'수행할 작업의 내용', x:'요약, 추출, 비교, 초안 작성'},
+      {h:'조건', em:'준수할 사항', x:'포함·제외할 내용, 분량, 문체'},
+      {h:'형식', em:'결과물의 형태', x:'표, 번호 목록, 메일 초안'}]},
+    {t:'prompt', label:'요청문 예시', to:'gemini', x:R`@Gmail 이번 주에 받은 메일 중 {{거래처명}}이 보낸 메일을 찾아, 요청사항과 회신 기한을 표로 정리해줘. 기한이 없는 메일은 '기한 없음'으로 적어줘.`},
+    {t:'note', k:'tip', x:'메일이나 문서는 주소(URL)를 붙여 넣는 대신 키워드와 서비스 종류로 지정합니다.'}
+  ]},
+  {id:'m1-calendar', eb:'Calendar', title:'일정 조회·등록·변경과 회의 준비', tools:['gemini','calendar'], blocks:[
+    {t:'prompt', h:'일정 조회', to:'gemini', x:R`@Calendar 이번 주 내 일정을 요일별로 정리하고, 겹치는 일정이 있으면 알려줘.`},
+    {t:'prompt', h:'일정 등록', to:'gemini', x:R`다음 주 화요일 14시에 '{{회의명}}' 일정을 등록해줘. 이미 일정이 있으면 등록하지 말고 비어 있는 시간대를 제안해줘.`},
+    {t:'prompt', h:'일정 변경', to:'gemini', x:R`방금 등록한 일정을 목요일 같은 시각으로 옮겨줘.`},
+    {t:'prompt', h:'회의 준비', to:'gemini', x:R`내일 일정 중 회의를 골라, 회의마다 준비할 자료와 확인할 사항을 체크리스트로 만들어줘.`},
+    {t:'note', k:'check', x:'등록하거나 변경한 일정은 Calendar에서 날짜와 시각이 정확한지 직접 확인합니다.'}
+  ]},
+  {id:'m1-gmail', eb:'Gmail', title:'메일 요약, 요청사항 추출, 회신 초안 작성', tools:['gemini','gmail'], blocks:[
+    {t:'prompt', h:'주요 메일 요약', to:'gemini', x:R`@Gmail 어제부터 받은 메일 중 읽지 않은 메일을 보낸 사람별로 묶어 한 줄씩 요약해줘.`},
+    {t:'prompt', h:'요청사항 추출', to:'gemini', x:R`{{거래처명}}과 주고받은 최근 메일에서 내가 해야 할 일과 기한을 표로 뽑아줘. 근거가 된 메일 제목도 함께 적어줘.`},
+    {t:'prompt', h:'회신 초안 작성', to:'gemini', x:R`방금 정리한 첫 번째 요청에 대한 회신 초안을 써줘. 정중한 말투로 쓰고, 확인이 필요한 부분은 [확인 필요]로 표시해줘.`},
+    {t:'note', k:'warn', x:'초안은 그대로 발송하지 않습니다. 수치와 일정, 약속 사항을 확인한 후 발송합니다.'}
+  ]},
+  {id:'m1-drive', eb:'Drive · Docs', title:'문서 검색·비교와 회의 자료 작성', tools:['gemini','drive'], blocks:[
+    {t:'prompt', h:'문서 검색', to:'gemini', x:R`@Drive '{{프로젝트명}}' 관련 문서를 찾아 제목, 최종 수정일, 한 줄 요약을 표로 정리해줘.`},
+    {t:'prompt', h:'문서 비교', to:'gemini', x:R`'{{문서 A}}'와 '{{문서 B}}'를 비교해 달라진 내용만 항목별로 정리해줘.`},
+    {t:'prompt', h:'회의 자료 작성', to:'gemini', x:R`위 문서들을 바탕으로 회의 자료 초안을 써줘. 구성은 배경, 현황, 논의할 사항, 요청사항 순으로 해줘.`},
+    {t:'note', k:'check', x:'작성한 초안은 Docs로 내보내 보완합니다. 검색된 문서가 최신본인지는 최종 수정일로 확인합니다.'}
+  ]},
+  {id:'m1-chain', eb:'연계', title:'일정·메일·문서 연계 요청', tools:['gemini'], blocks:[
+    {t:'flow', items:[
+      {h:'Calendar', x:'회의 시각과 참석자'},
+      {h:'Gmail', x:'최근 메일의 쟁점'},
+      {h:'Drive', x:'관련 문서의 핵심 내용'},
+      {h:'회의 준비 메모', x:'안건, 쟁점, 준비 사항', end:1}]},
+    {t:'prompt', to:'gemini', x:R`내일 '{{회의명}}' 회의를 준비하려고 해.
+1) @Calendar 에서 회의 시각과 참석자를 확인하고
+2) @Gmail 에서 참석자와 최근 주고받은 메일의 쟁점을 요약하고
+3) @Drive 에서 관련 문서를 찾아 핵심 내용을 정리한 뒤
+회의 준비 메모(안건, 쟁점, 내가 준비할 것)로 만들어줘.`},
+    {t:'note', k:'tip', x:'동일한 채팅에서 이어지는 질문에는 앱을 다시 지정하지 않아도 됩니다.'}
+  ]},
+  {id:'m1-check', eb:'확인', title:'답변 확인 방법', blocks:[
+    {t:'p', x:'Gemini의 답변에는 사실과 다르거나 오래된 정보가 포함될 수 있습니다.'},
+    {t:'cards', items:[
+      {h:'출처 확인', x:'답변 하단에 표시되는 출처를 선택하여 원문 메일·문서와 대조합니다.'},
+      {h:'날짜 확인', x:'최근 메일이 아닌 과거 메일에서 가져온 정보가 아닌지 확인합니다.'},
+      {h:'실행 전 확인', x:'일정 등록·변경과 회신 발송은 내용을 검토한 후 진행합니다.'}]}
+  ]},
+  {id:'m1-output', eb:'산출물', title:'상황별 업무 비서 프롬프트 정리', tools:['sheets','docs'], blocks:[
+    {t:'p', x:'실습에서 사용한 요청문을 상황별로 정리하고, 본인의 업무 상황을 한 건 이상 추가합니다.'},
+    {t:'table', head:['상황','사용 앱','요청문','확인 사항'], rows:[
+      ['주간 일정 점검','Calendar','금주 일정을 요일별로 정리하고 중복 일정 표시','누락·중복 일정'],
+      ['거래처 요청 정리','Gmail','최근 메일에서 요청사항과 기한을 표로 추출','근거 메일, 기한'],
+      ['회의 준비','Calendar · Gmail · Drive','참석자, 쟁점, 관련 문서를 종합하여 준비 메모 작성','문서의 최신 여부']]},
+    {t:'mine'}
+  ]}
+ ]},
+
+{id:'m2', eb:'모듈 ②', nav:'웹앱 제작', title:'매출 집계·분석 대시보드 만들기', lead:'Google AI Studio 기반 조회·시각화 웹앱 제작',
+ out:'매출 분석 대시보드', outNote:'기간·제품군·거래처별 매출과 추이를 조회하는 웹앱', tools:['studio'],
+ steps:[
+  {id:'m2-build', eb:'도구', title:'Google AI Studio Build 작업 방식', tools:['studio'], blocks:[
+    {t:'ol', items:[
+      '<b>설명</b> · <code>aistudio.google.com/apps</code> 의 입력창에 제작할 앱을 기술합니다.',
+      '<b>생성</b> · 코드와 파일이 생성되고, 화면 우측에 앱 미리보기가 표시됩니다.',
+      '<b>수정</b> · 채팅 또는 주석 모드로 변경할 내용을 요청합니다.']},
+    {t:'cards', items:[
+      {h:'생성 결과물', x:'화면과 서버(Node.js)를 함께 갖춘 풀스택 웹앱입니다. 코드는 Code 탭에서 확인합니다.'},
+      {h:'두 가지 수정 방법', x:'채팅은 문장으로 요청하며, 주석 모드는 화면에서 변경할 부분을 지정하여 설명합니다.'}]}
+  ]},
+  {id:'m2-screen', eb:'제작 대상', title:'매출 분석 대시보드 구성', blocks:[
+    {t:'wire'},
+    {t:'ol', items:[
+      '<b>조회 조건</b> · 기간, 제품군, 거래처를 선택하여 조회합니다.',
+      '<b>핵심 지표</b> · 총매출, 거래 건수, 전월 대비 증감률',
+      '<b>추이와 구성</b> · 월별 매출 추이 차트, 제품군별·거래처별 매출 표']}
+  ]},
+  {id:'m2-data', eb:'데이터', title:'실습 데이터', blocks:[
+    {t:'p', x:'배포된 샘플 매출 데이터(CSV 파일)를 사용합니다. 거래 1건이 1개 행으로 구성됩니다.'},
+    {t:'table', head:['열','형식','용도'], rows:[
+      ['거래일자','날짜','기간 조회, 월별 추이'],
+      ['제품군','문자 (예: 배관용, 구조용, 유정용)','제품군별 집계'],
+      ['거래처','문자','거래처별 집계'],
+      ['수량','숫자','판매량 지표'],
+      ['매출액','숫자','총매출, 증감률']]},
+    {t:'ul', h:'데이터 제공 시 유의 사항', items:[
+      '입력창의 파일 추가(+) 메뉴로 첨부합니다.',
+      '열 이름을 요청문에 그대로 기재합니다.',
+      '첨부한 데이터만 사용하도록 요청문에 명시합니다.']}
+  ]},
+  {id:'m2-prompt', eb:'제작', title:'최초 요청문', tools:['studio'], blocks:[
+    {t:'note', k:'check', x:'샘플 매출 데이터를 파일 추가(+)로 먼저 첨부한 뒤 요청문을 붙여 넣습니다.'},
+    {t:'prompt', to:'studio', x:R`첨부한 매출 데이터로 '매출 분석 대시보드' 웹앱을 만들어줘.
+
+[데이터]
+- 첨부 파일의 데이터만 사용한다. 임의의 예시 데이터를 만들지 않는다.
+- 열: 거래일자, 제품군, 거래처, 수량, 매출액
+
+[표시]
+- 금액에는 천 단위 구분 기호와 단위를 넣는다.
+- 모든 텍스트는 한국어, 깔끔한 업무용 디자인
+
+[화면]
+- 상단: 총매출, 거래 건수, 전월 대비 증감률
+- 가운데: 월별 매출 추이 차트
+- 하단: 제품군별·거래처별 매출 표 (매출이 높은 순)`},
+    {t:'note', k:'tip', x:'데이터, 화면, 표시 방식으로 구분하여 작성하면 누락된 조건을 확인하기 쉽습니다.'}
+  ]},
+  {id:'m2-filter', eb:'제작', title:'조회 기능 추가', tools:['studio'], blocks:[
+    {t:'note', k:'check', x:'기능은 한 번에 하나씩 요청합니다. 기능을 추가할 때마다 기존 기능이 정상 동작하는지 확인합니다.'},
+    {t:'prompt', h:'기간별 조회', to:'studio', x:R`기간 선택 기능을 추가해줘. 시작일과 종료일을 고르면 모든 지표와 차트, 표가 그 기간으로 다시 계산되게 해줘.`},
+    {t:'prompt', h:'제품군별 조회', to:'studio', x:R`제품군을 여러 개 선택하는 필터를 추가해줘. 선택한 제품군의 매출 추이를 한 차트에서 비교할 수 있게 해줘.`},
+    {t:'prompt', h:'거래처별 조회', to:'studio', x:R`거래처를 검색해 선택하면 그 거래처의 월별 매출과 제품군 구성을 보여줘.`}
+  ]},
+  {id:'m2-fix', eb:'수정', title:'수정 요청 방법', tools:['studio'], blocks:[
+    {t:'p', x:'발생 위치, 현재 나타나는 현상, 기대하는 결과를 함께 기술합니다.'},
+    {t:'pairs', head:['모호한 요청','증상을 기술한 요청'], items:[
+      ['차트가 이상해. 고쳐줘.','월별 추이 차트에서 1월이 맨 오른쪽에 나온다. 월 순서대로 왼쪽부터 정렬해줘.'],
+      ['필터가 안 돼.','기간을 바꿔도 상단의 총매출 숫자가 그대로다. 기간 필터가 총매출에도 적용되게 해줘.'],
+      ['표를 보기 좋게 해줘.','매출 표의 금액이 왼쪽 정렬이라 자릿수를 비교하기 어렵다. 금액 열을 오른쪽 정렬로 바꿔줘.']]},
+    {t:'cards', items:[
+      {h:'주석 모드', x:'화면에서 수정할 부분을 직접 지정하고 변경할 내용을 설명합니다. 위치를 문장으로 설명하기 어려운 경우에 사용합니다.'}]}
+  ]},
+  {id:'m2-llm', eb:'기능 개선', title:'다른 LLM을 활용한 기능 개선', tools:['chatgpt','claude'], blocks:[
+    {t:'p', x:'동일한 질문을 Gemini 외의 LLM(ChatGPT, Claude 등)에도 입력하여 답변을 비교합니다.'},
+    {t:'prompt', label:'요청문 예시', toText:'다른 LLM에 입력 · 아래에 내 요청문을 붙여 넣기', x:R`아래는 매출 대시보드를 만들 때 쓴 요청문이야. 빠진 조건이나 모호한 표현을 찾고, 고친 요청문을 다시 써줘.`},
+    {t:'cards', items:[
+      {h:'개선 아이디어 도출', x:'대시보드 화면을 제시하고, 실무자에게 추가로 필요한 지표를 질의합니다.'},
+      {h:'요청문 보완', x:'작성한 요청문에서 누락된 조건과 모호한 표현을 찾도록 요청합니다.'},
+      {h:'계산 방식 확인', x:'Code 탭의 계산 부분을 붙여 넣고, 계산 방식에 대한 설명을 요청합니다.'}]}
+  ]},
+  {id:'m2-verify', eb:'검증', title:'계산 결과 검증', tools:['sheets'], blocks:[
+    {t:'p', x:'대시보드의 수치는 원본 데이터로 재계산하여 대조합니다.'},
+    {t:'checktable', id:'m2-verify', head:['확인 항목','대조 방법'], rows:[
+      ['총매출','스프레드시트에서 매출액 열의 합계를 산출하여 비교'],
+      ['기간 필터','특정 월만 선택한 값과 해당 월의 합계를 비교'],
+      ['제품군·거래처별 합계','피벗 테이블 결과와 비교하고, 부분 합의 총합이 총매출과 일치하는지 확인'],
+      ['전월 대비 증감률','두 달의 값을 직접 계산하여 비교']]},
+    {t:'note', k:'tip', x:'<b>다른 LLM을 통한 교차 검증</b> · 동일한 파일을 제공하여 총매출과 월별 합계를 계산하도록 한 뒤 대시보드 값과 비교합니다. 값이 다를 경우 원본 데이터로 오류가 있는 쪽을 확인합니다.'}
+  ]}
+ ]},
+
+{id:'m3', eb:'모듈 ③', nav:'AI 에이전트 구현', title:'고객 문의 분류·응답 에이전트 만들기', lead:'문의 분류, 응대 기준 참조, 답변 초안 생성',
+ out:'VOC 분석·응답 에이전트', outNote:'고객 문의를 분류하고 응대 기준에 맞는 답변 초안을 생성하는 도구', tools:['studio'],
+ steps:[
+  {id:'m3-flow', eb:'제작 대상', title:'에이전트 처리 흐름', blocks:[
+    {t:'flow', items:[
+      {h:'문의 입력', x:'고객 문의 1건'},
+      {h:'요약', x:'두 문장으로 요약'},
+      {h:'유형 분류', x:'유형과 분류 근거'},
+      {h:'기준 참조', x:'해당 응대 기준'},
+      {h:'답변 초안', x:'기준에 따라 작성', end:1}]},
+    {t:'p', x:'마지막 단계에서 담당자 확인 필요 여부를 판단합니다.'},
+    {t:'cards', items:[
+      {h:'초안 전달', x:'응대 기준으로 답변할 수 있는 문의는 답변 초안을 제시합니다.'},
+      {h:'담당자 확인', x:'기준에 없거나 별도 판단이 필요한 문의는 사유와 함께 표시합니다.'}]}
+  ]},
+  {id:'m3-data', eb:'데이터', title:'실습 데이터: 문의 목록과 응대 기준', blocks:[
+    {t:'cards', items:[
+      {h:'고객 문의 목록', x:'구성 열: 접수일, 고객사, 채널, 문의 내용, 처리 상태. 문의 1건이 1개 행으로 구성됩니다.'},
+      {h:'응대 기준 문서', x:'유형별 답변 원칙, 안내 가능 범위, 담당 부서. 답변 초안은 본 문서의 내용만을 근거로 작성합니다.'}]},
+    {t:'chips', h:'문의 유형 예시', items:['납기·출하','품질·클레임','견적·가격','서류 요청','기타']},
+    {t:'note', k:'warn', x:'실제 고객 정보가 포함된 문의는 사용하지 않습니다.'}
+  ]},
+  {id:'m3-classify', eb:'제작 1', title:'유형 분류와 처리 현황 시각화', tools:['studio'], blocks:[
+    {t:'note', k:'check', x:'고객 문의 목록 파일을 먼저 첨부한 뒤 요청문을 붙여 넣습니다.'},
+    {t:'prompt', to:'studio', x:R`첨부한 고객 문의 목록으로 'VOC 분석 도구' 웹앱을 만들어줘.
+
+[분류]
+- 문의마다 유형을 하나 붙인다: 납기·출하, 품질·클레임, 견적·가격, 서류 요청, 기타
+- 분류한 이유를 한 줄로 함께 적는다.
+- 판단하기 어려우면 '기타'로 두고 이유를 적는다.
+
+[화면]
+- 유형별 건수 차트와 처리 상태별 건수
+- 문의 목록 표: 접수일, 고객사, 유형, 처리 상태
+- 유형과 처리 상태로 걸러 보는 필터
+- 첨부 파일의 문의만 사용하고 예시 문의를 만들지 않는다.`},
+    {t:'note', k:'tip', x:'분류는 앱 내부에서 Gemini가 수행합니다. AI Studio가 Gemini API 키를 서버 측에 자동으로 설정하므로 키를 별도로 입력할 필요가 없습니다.'}
+  ]},
+  {id:'m3-draft', eb:'제작 2', title:'요약, 응대 기준 참조, 답변 초안', tools:['studio'], blocks:[
+    {t:'note', k:'check', x:'응대 기준 문서를 함께 첨부합니다.'},
+    {t:'prompt', to:'studio', x:R`문의를 선택하면 아래 순서로 처리하는 기능을 추가해줘.
+1. 문의 내용을 두 문장으로 요약한다.
+2. 첨부한 응대 기준 문서에서 이 문의에 해당하는 항목을 찾아, 그 문장을 그대로 보여준다.
+3. 찾은 기준에 맞춰 답변 초안을 쓴다.
+
+- 응대 기준에 없는 내용은 답변에 넣지 않는다.
+- 초안 아래에 참조한 기준 항목의 제목을 표시한다.
+- 초안은 고쳐 쓸 수 있는 입력창에 넣는다.`},
+    {t:'cards', h:'화면 표시 항목', items:[
+      {h:'요약', x:'문의의 핵심을 두 문장으로 요약'},
+      {h:'참조한 기준', x:'응대 기준 문서의 해당 문장'},
+      {h:'답변 초안', x:'담당자가 수정하여 사용하는 초안'}]}
+  ]},
+  {id:'m3-escalate', eb:'제작 3', title:'담당자 확인이 필요한 문의 구분', tools:['studio'], blocks:[
+    {t:'p', x:'AI가 답변할 수 있는 문의와 담당자의 판단이 필요한 문의를 구분합니다. 구분 기준은 실제 응대 기준과 업무 규정에 맞게 조정합니다.'},
+    {t:'prompt', to:'studio', x:R`아래에 해당하는 문의는 답변 초안을 쓰지 말고 '담당자 확인 필요'로 표시한 뒤 사유를 적어줘.
+- 응대 기준에 해당 항목이 없는 문의
+- 금액, 보상, 계약 조건을 약속해야 하는 문의
+- 품질 문제나 안전과 관련된 문의
+- 내용이 불명확해 추가 확인이 필요한 문의
+
+문의 목록에서 '담당자 확인 필요'만 모아 보는 필터도 추가해줘.`}
+  ]},
+  {id:'m3-improve', eb:'개선', title:'응답 개선', tools:['studio'], blocks:[
+    {t:'p', x:'테스트 문의를 입력해 본 뒤, 잘못 처리된 사례를 그대로 제시하여 수정을 요청합니다.'},
+    {t:'table', head:['증상','수정 요청 예시'], copyCol:1, rows:[
+      ['유형 분류 오류가 잦음',{x:'잘못 분류된 문의를 예로 들어 "이런 문의는 \'납기·출하\'로 분류해줘"라고 요청', c:"이런 문의는 '납기·출하'로 분류해줘"}],
+      ['답변이 응대 기준과 다름',{x:'"답변 초안의 각 문장이 어느 기준 항목에서 나왔는지 표시해줘"', c:'답변 초안의 각 문장이 어느 기준 항목에서 나왔는지 표시해줘'}],
+      ['문체가 적절하지 않음',{x:'"답변은 정중한 말투로 쓰고, 사과 표현은 한 번만 써줘"', c:'답변은 정중한 말투로 쓰고, 사과 표현은 한 번만 써줘'}],
+      ['확인이 필요한 문의에 초안이 생성됨',{x:'"보상이나 금액이 언급되면 반드시 \'담당자 확인 필요\'로 표시해줘"', c:"보상이나 금액이 언급되면 반드시 '담당자 확인 필요'로 표시해줘"}]]},
+    {t:'note', k:'tip', x:'본 분류·응답 기능은 이후 MCP 연동 실습에서 계속 사용합니다.'}
+  ]}
+ ]},
+
+{id:'m4', eb:'모듈 ④', nav:'외부 정보 활용', title:'산업 뉴스 수집과 시장 동향 보고서 작성 자동화하기', lead:'뉴스 대시보드, 이슈·출처 정리, 보고서 초안과 근거 확인',
+ out:'관심 분야별 뉴스 수집·추천 대시보드, 시장 동향 보고서', tools:['studio','notebook','gemini'],
+ stages:{
+  s1:{eb:'1단계', name:'수집 연결 확인', sub:'구글 뉴스 RSS'},
+  s2:{eb:'2단계', name:'뉴스 대시보드 제작', sub:'Google AI Studio', tool:'studio'},
+  s3:{eb:'3단계', name:'핵심 이슈·출처 정리', sub:'Gemini Notebook', tool:'notebook'},
+  s4:{eb:'4단계', name:'보고서 초안과 근거 확인', sub:'Gemini', tool:'gemini'},
+  s5:{eb:'참고', name:'문제 발생 시'}
+ },
+ steps:[
+  {id:'m4-flow', eb:'흐름', title:'실습 흐름', blocks:[
+    {t:'flow', items:[
+      {tag:'1 · 구글 뉴스 RSS', h:'수집 연결 확인', x:'주소 입력 시 기사 목록 수신 여부 확인'},
+      {tag:'2 · Google AI Studio', h:'뉴스 대시보드 제작', x:'수집, 중복 제거, 추천 점수 산정'},
+      {tag:'3 · Gemini Notebook', h:'핵심 이슈·출처 정리', x:'선정 기사에서 이슈 3가지와 출처 정리'},
+      {tag:'4 · Gemini', h:'보고서 초안과 근거 확인', x:'초안 작성 후 원문과 대조', end:1}]},
+    {t:'chips', h:'예시 주제 · 강관 사업', items:['강관','유정용 강관','철강 관세','열연 가격']}
+  ]},
+  {id:'m4-rss', stage:'s1', eb:'수집', title:'수집 방식: 구글 뉴스 RSS', blocks:[
+    {t:'flow', items:[
+      {h:'브라우저 화면', x:'키워드를 입력하고 기사 카드를 조회합니다.'},
+      {h:'앱 서버 /api/news', x:'RSS를 수신하여 정리한 후 화면에 전달합니다.'},
+      {h:'구글 뉴스 RSS', x:'키워드별 기사 목록(XML)을 반환합니다.', end:1}]},
+    {t:'code', h:'수집 주소', x:'https://news.google.com/rss/search?q={키워드}&hl=ko&gl=KR&ceid=KR:ko'},
+    {t:'cards', items:[
+      {h:'별도 가입 불필요', x:'API 키 발급, 회원 가입, 카드 등록이 필요하지 않습니다.'},
+      {h:'서버에서 수집', x:'화면에서 직접 호출하지 않고 앱 서버가 수신합니다.'},
+      {h:'제목과 링크 제공', x:'제목, 링크, 발행 시각, 언론사가 제공되며 본문은 제공되지 않습니다.'}]}
+  ]},
+  {id:'m4-connect', stage:'s1', eb:'1단계', title:'수집 연결 확인', blocks:[
+    {t:'rss'},
+    {t:'ol', h:'확인 순서', items:[
+      '위 주소를 주소창에 붙여 넣습니다. 버튼을 누르면 새 탭에서 바로 열립니다.',
+      '기사 목록(XML)이 표시되면 정상적으로 연결된 것입니다.',
+      '<code>q=</code> 뒤의 키워드를 변경하여 다시 확인합니다.']},
+    {t:'table', head:['item 항목','포함 정보'], rows:[
+      ['<code>title</code>',"기사 제목 (끝에 ' - 언론사명'이 붙어 있음)"],
+      ['<code>link</code>','구글 뉴스 중계 주소'],
+      ['<code>pubDate</code>','발행 시각'],
+      ['<code>source</code>','언론사 이름']]}
+  ]},
+  {id:'m4-rules', stage:'s2', eb:'2단계', title:'요청문에 포함할 네 가지 조건', blocks:[
+    {t:'p', x:'AI는 뉴스를 수신하지 못할 경우 실제처럼 보이는 가짜 기사로 화면을 채울 수 있습니다. 따라서 요청문에 다음 조건을 명시합니다.'},
+    {t:'ol', items:[
+      '<b>가짜·샘플 기사 생성 금지</b> · 오류 대비용 기본 데이터도 포함하지 않습니다.',
+      '<b>실패 시 오류를 그대로 표시</b> · 상태 코드와 오류 메시지를 화면에 그대로 표시합니다.',
+      '<b>연결 상태 상시 표시</b> · 화면 상단에 연결 여부와 마지막 수집 시각을 표시합니다.',
+      '<b>임의 URL 중계 기능 금지</b> · 서버는 구글 뉴스 RSS만 요청하도록 제한합니다.']}
+  ]},
+  {id:'m4-prompt', stage:'s2', eb:'2단계 · 요청문 1/4 ~ 4/4', title:'대시보드 요청문', tools:['studio'], blocks:[
+    {t:'p', x:'교안의 요청문 네 장(구조, 데이터 원칙과 처리, 기능 1–4, 기능 5–8과 화면)이 하나의 요청문입니다. 전문을 한 번에 복사하여 붙여 넣습니다.'},
+    {t:'prompt', label:'요청문 전문', toText:'AI Studio Build에 그대로 입력', to:'studio', long:1, x:P_NEWS},
+    {t:'note', k:'tip', x:'8번 복사 기능으로 선정한 기사 목록을 다음 단계에서 활용합니다.'}
+  ]},
+  {id:'m4-inspect', stage:'s2', eb:'2단계', title:'생성된 앱 점검', tools:['studio'], blocks:[
+    {t:'checks', id:'m4-inspect', items:[
+      {h:'연결 상태', x:'화면 상단에 "구글 뉴스 연결됨"과 마지막 수집 시각이 표시되는지 확인합니다.'},
+      {h:'새 키워드 검색', x:'기본 키워드에 없는 단어(예: 해상풍력)를 등록하여 수집합니다.'},
+      {h:'원문 열기', x:"'원문 보기'를 선택했을 때 실제 기사가 열리는지 확인합니다."}]},
+    {t:'ul', h:'가짜 기사의 징후', items:["'원문 보기' 링크가 열리지 않음",'"[기획]…"과 같이 정형화된 제목만 표시됨']},
+    {t:'p', x:'<b>대처 방법</b> · 요청문의 [데이터 원칙]을 다시 붙여 넣고, 실제 수집 결과만 표시하도록 요청합니다.'},
+    {t:'prompt', label:'[데이터 원칙]', h:'다시 붙여 넣을 부분', to:'studio', x:P_DATA_RULES}
+  ]},
+  {id:'m4-levels', stage:'s2', eb:'2단계', title:'단계별 진행: 기본, 개선, 도전', tools:['studio'], blocks:[
+    {t:'cards', items:[
+      {tag:'전원 공통', h:'기본', x:'요청문으로 앱을 생성하고 동작을 확인합니다. 키워드는 본인의 업무에 맞게 변경합니다. (예: 해상풍력, LNG, 반덤핑, 건설 경기)'},
+      {tag:'기본 단계 완료 후', h:'개선', x:'중복 기사가 올바르게 묶이는지 확인합니다. 묶이지 않는 경우 "같은 사건을 다룬 기사가 따로 나온다"와 같이 증상을 기술하여 수정을 요청합니다.'},
+      {tag:'여유가 있는 경우', h:'도전', x:'앱 내부에서 Gemini로 기사별 "업무 관련 사유"를 한 줄씩 생성하고, 규칙 기반 추천 점수와 비교합니다.'}]},
+    {t:'note', k:'check', x:'다음 단계를 위해 대시보드에서 기사 5~8건을 선정해 둡니다.'}
+  ]},
+  {id:'m4-nb', stage:'s3', eb:'3단계', title:'Gemini Notebook 이슈 정리 순서', tools:['notebook'], blocks:[
+    {t:'p', x:"대시보드에서 선정한 기사를 근거로 핵심 이슈 3가지와 이슈별 출처를 정리한 '이슈 정리 노트'를 작성합니다."},
+    {t:'flow', items:[
+      {tag:'1', h:'소스 추가', x:'소스 6~8건'},
+      {tag:'2', h:'소스 점검', x:'비정상 소스 제거'},
+      {tag:'3', h:'채팅 설정과 질문', x:'이슈 3개, 영향 분석'},
+      {tag:'4', h:'인용 확인', x:'근거 검증 완료'},
+      {tag:'5', h:'메모 저장', x:'이슈 정리 노트', end:1}]},
+    {t:'note', k:'tip', x:'Gemini Notebook은 NotebookLM의 변경된 명칭입니다. 로고와 메뉴 명칭이 변경되었으며 기능은 동일합니다. 기존 NotebookLM 주소로 접속합니다.'}
+  ]},
+  {id:'m4-pick', stage:'s3', eb:'3단계', title:'기사 선정과 소스 추가', tools:['notebook'], blocks:[
+    {t:'note', k:'warn', x:'대시보드의 링크는 구글 뉴스 중계 주소이므로, 그대로 입력하면 기사 본문이 추가되지 않습니다.'},
+    {t:'cols', items:[
+      {t:'ul', h:'선정 기준 (5~8건)', items:[
+        '추천 점수가 높고 유사 기사가 많은 기사',
+        '동일 이슈는 서로 다른 언론사의 기사로 2~3건',
+        '성격이 다른 이슈도 1~2건 (예: 관세와 원자재 가격)']},
+      {t:'ol', h:'원문 주소로 추가', items:[
+        "'원문 보기'를 선택하여 기사를 엽니다.",
+        '주소창에서 언론사 원문 주소를 복사합니다.',
+        '소스 추가의 웹사이트 항목에 붙여 넣습니다. 여러 건은 줄을 바꾸어 한 번에 입력합니다.']}]},
+    {t:'cards', items:[
+      {h:'원문이 추가되지 않는 경우', x:"본문을 복사하여 '복사된 텍스트'로 추가하고, 첫 줄에 [언론사, 발행일, 원문 URL]을 기재합니다."},
+      {h:'배포 자료 함께 추가', x:'기사만으로는 부족한 배경 맥락을 보완하기 위해 배포 자료 1~2건을 함께 추가합니다.'}]}
+  ]},
+  {id:'m4-source', stage:'s3', eb:'3단계', title:'소스 점검', tools:['notebook'], blocks:[
+    {t:'p', x:'질문에 앞서, 추가된 소스가 기사 본문인지 먼저 확인합니다.'},
+    {t:'prompt', to:'notebook', x:R`각 소스의 언론사, 발행일, 제목, 핵심 내용 한 줄을 표로 정리해줘.
+기사 본문이 아닌 소스(로그인 화면, 구독 안내, 쿠키 안내, 오류 페이지 등)가 있으면 따로 표시해줘.`},
+    {t:'cards', items:[
+      {h:'표시된 소스 정리', x:'기사 본문이 아닌 소스는 삭제하거나 선택을 해제합니다.'},
+      {h:'소스 재추가', x:"필요한 기사는 '복사된 텍스트' 방식으로 다시 추가합니다."}]}
+  ]},
+  {id:'m4-chat', stage:'s3', eb:'3단계', title:'채팅 설정: 대화 목표', tools:['notebook'], blocks:[
+    {t:'p', x:'채팅 창의 설정에서 대화 목표를 다음과 같이 지정합니다.'},
+    {t:'prompt', label:'대화 목표', toText:'Gemini Notebook 채팅 설정에 입력', to:'notebook', x:R`나는 세아제강 강관 사업 관련 실무자다.
+모든 답변은 소스에 있는 내용만 근거로 하고, 소스에 없는 내용은 "소스에 없음"이라고 밝혀라.
+문장마다 출처를 [언론사, 발행일] 형식으로 본문에 직접 적어라.`},
+    {t:'ul', h:'출처를 본문에 표기하도록 하는 이유', items:[
+      '인용 번호는 답변을 복사하여 다른 곳에 붙여 넣으면 어느 기사를 가리키는지 알 수 없게 됩니다.',
+      '출처를 본문에 문자로 표기해 두면 보고서 작성 단계까지 출처가 유지됩니다.']}
+  ]},
+  {id:'m4-q', stage:'s3', eb:'3단계', title:'이슈 정리 질문 세 가지', tools:['notebook'], blocks:[
+    {t:'prompt', label:'질문 1', h:'핵심 이슈', to:'notebook', x:R`소스들에서 반복적으로 등장하는 핵심 이슈 3가지를 뽑아줘.
+이슈마다 ① 한 줄 요약 ② 주요 사실(숫자·날짜 포함) ③ 이 이슈를 다룬 소스 목록 ④ 보도한 언론사 수를 적어줘. 여러 언론이 다룬 이슈를 우선해.`},
+    {t:'prompt', label:'질문 2', h:'당사 영향', to:'notebook', x:R`이 3가지 이슈가 강관 사업(유정용 강관 수출, 배관·구조관 내수 등)에 주는 영향을 기회와 위협으로 나눠줘.
+소스에 직접 나온 사실과, 그 사실로부터 추론한 내용을 구분해서 표시해줘.`},
+    {t:'prompt', label:'질문 3', h:'불일치 확인', to:'notebook', x:R`같은 사안에 대해 소스끼리 숫자, 날짜, 전망이 서로 다르게 나오는 부분이 있으면 찾아줘.
+없으면 없다고 답해줘.`},
+    {t:'note', k:'tip', x:'질문 2와 3과 같이, 사실과 추론을 구분하여 제시하도록 요구할 수 있습니다.'}
+  ]},
+  {id:'m4-cite', stage:'s3', eb:'3단계', title:'인용 확인과 소스 외 질문', tools:['notebook'], blocks:[
+    {t:'p', x:'<b>인용 확인</b> · 질문 1의 답변에서 이슈별로 수치를 하나씩 선택하여 인용 번호를 누르고, 원문에서 강조 표시된 부분과 대조합니다.'},
+    {t:'matrix', id:'m4-cite', head:['확인 항목','이슈 1','이슈 2','이슈 3'], rows:[
+      '수치·날짜가 원문과 일치',
+      '인용된 소스에 해당 내용이 실제로 있음',
+      '출처 표기 [언론사, 발행일]가 정확함']},
+    {t:'prompt', label:'소스 외 질문', to:'notebook', x:R`이 자료를 근거로 세아제강의 다음 분기 영업이익을 예측해줘.`},
+    {t:'note', k:'check', x:'기대 답변은 "소스에 없음"입니다. 수치를 임의로 제시하는 경우 채팅 설정의 적용 여부를 확인합니다.'}
+  ]},
+  {id:'m4-memo', stage:'s3', eb:'3단계', title:'메모 저장과 다음 단계 준비 자료', tools:['notebook'], blocks:[
+    {t:'cards', items:[
+      {h:'메모에 저장', x:"질문 1과 질문 2의 답변을 '메모에 저장'합니다."},
+      {h:'선택 활동: 데이터 표', x:"스튜디오의 '데이터 표' 기능으로 이슈별 내용을 아래 형식의 표로 작성합니다."},
+      {h:'보고서 단계에 활용할 자료', x:'저장한 메모 텍스트와 원문 주소 목록을 활용합니다.'}]},
+    {t:'table', cap:'데이터 표 형식', head:['이슈','핵심 사실','출처 (언론사·발행일)','기회·위협'], rows:[
+      ['[이슈 1]','[수치·날짜를 포함한 사실]','[언론사, 발행일]','[기회 또는 위협]']]}
+  ]},
+  {id:'m4-report', stage:'s4', eb:'4단계', title:'보고서 초안 요청', tools:['gemini','docs'], blocks:[
+    {t:'ol', h:'보고서 틀', items:['이번 주 핵심 이슈 3개','이슈별 주요 내용과 출처','당사 영향: 기회와 위협','대응 방향과 추가 모니터링 포인트']},
+    {t:'prompt', to:'gemini', toText:'Gemini에 입력 · 맨 아래에 저장한 메모 붙여 넣기', x:R`아래 [이슈 정리 노트]만 근거로 '강관 시장 동향 보고서' 초안을 써줘.
+- 구성: 1) 이번 주 핵심 이슈 3개 2) 이슈별 주요 내용과 출처 3) 당사 영향: 기회와 위협 4) 대응 방향과 추가 모니터링 포인트
+- 노트에 적힌 [언론사, 발행일] 출처 표기는 문장마다 그대로 둔다.
+- 노트에 없는 내용을 덧붙인 문장에는 끝에 (추가)라고 표시한다.
+- '당사 영향'에서는 사실과 추론을 구분해 적는다.
+
+[이슈 정리 노트]
+(저장한 메모를 여기에 붙여넣기)`},
+    {t:'note', k:'tip', x:'완성된 초안은 Google Docs로 내보냅니다.'}
+  ]},
+  {id:'m4-evidence', stage:'s4', eb:'4단계', title:'근거 확인 체크리스트', tools:['gemini'], blocks:[
+    {t:'p', x:'AI가 작성한 보고서는 근거를 확인한 후 사용합니다.'},
+    {t:'checks', id:'m4-evidence', items:[
+      {h:'수치와 날짜가 원문과 일치하는가'},
+      {h:'출처 없이 포함된 문장은 무엇인가', x:'Gemini가 추가한 일반론'},
+      {h:"'당사 영향'은 사실인가, 추론인가"}]}
+  ]},
+  {id:'m4-trouble', stage:'s5', eb:'참고', title:'문제 발생 시 대처 방법', blocks:[
+    {t:'table', head:['증상','원인','대처'], rows:[
+      ['소스 추가 실패 또는 내용 없음','유료 기사, 봇 차단',"본문을 복사하여 '복사된 텍스트'로 추가 (첫 줄에 출처 기재)"],
+      ['소스 내용이 구글 뉴스 화면으로 표시됨','중계 주소를 그대로 입력함','기사를 열어 원문 주소를 복사한 후 다시 추가'],
+      ['답변에 출처 없이 일반론만 제시됨','채팅 설정 미적용','질문 끝에 "소스에 있는 내용만, 출처 표기" 조건을 다시 추가'],
+      ['사용량 한도 안내가 표시됨','무료 사용량 소진','강사 공유 노트북(보기 권한)으로 계속 진행'],
+      ['선정한 기사가 부족함','대시보드 단계 지연','강사 공유 노트북에서 질문 실습만 진행']]}
+  ]}
+ ]}
+];
+
+/* ── 상태: 진행 표시는 이 브라우저에만 저장(막혀 있으면 메모리로만 동작) ── */
+const KEY = 'vibe-helper-progress-v1';
+const store = {
+  data:{},
+  load(){ try{ const v = JSON.parse(localStorage.getItem(KEY) || '{}'); if (v && typeof v === 'object') this.data = v; }catch(e){ this.data = {}; } },
+  save(){ try{ localStorage.setItem(KEY, JSON.stringify(this.data)); }catch(e){} },
+  clear(){ this.data = {}; try{ localStorage.removeItem(KEY); }catch(e){} }
+};
+const SLOTS = {};            // 빈칸에 적은 값. 저장하지 않는다.
+const COPY = [];             // 복사 버튼이 가리키는 문장
+const PROMPTS = [];          // 요청문 원문
+const STEP_VIEW = {};        // 단계 id → 모듈 id
+const VIEWS = ['start','m1','m2','m3','m4','wrap'];
+const VIEW_NAME = {start:'시작하기', wrap:'정리'};
+MODS.forEach(m => { VIEW_NAME[m.id] = m.eb + ' · ' + m.nav; m.steps.forEach(s => { STEP_VIEW[s.id] = m.id; }); });
+let current = 'start';
+
+const $ = (s, r) => (r || document).querySelector(s);
+const $$ = (s, r) => Array.from((r || document).querySelectorAll(s));
+const esc = s => String(s).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+
+/* ── 조각 ── */
+function launch(key, label){
+  const t = TOOLS[key];
+  const short = label ? `<span>${label}</span>` : t.short ? `<span class="lbl-full">${t.label}</span><span class="lbl-short">${t.short}</span>` : `<span>${t.label}</span>`;
+  return `<a class="go${t.mono ? ' pri' : ''}" href="${t.url}" target="_blank" rel="noopener">${t.mono ? `<i class="mono ${key}" aria-hidden="true">${t.mono}</i>` : ''}${short}<b aria-hidden="true">↗</b></a>`;
+}
+function copyBtn(text, label){
+  COPY.push(text);
+  return `<button class="copy" type="button" data-copy="${COPY.length - 1}">${label || '복사'}</button>`;
+}
+function promptHTML(b){
+  const i = PROMPTS.push(b) - 1;
+  let n = 0;
+  const body = esc(b.x).replace(/\{\{(.+?)\}\}/g, (_, k) =>
+    `<input class="slot" type="text" id="slot-${i}-${n++}" data-slot="${k}" placeholder="[${k}]" aria-label="${k} 직접 입력" autocomplete="off" spellcheck="false">`);
+  const to = b.toText || (b.to ? TOOLS[b.to].name + '에 입력' : '');
+  return `<div class="prompt">
+    <div class="p-head"><span class="p-label">${b.label || '요청문'}</span>${b.h ? `<span class="p-title">${b.h}</span>` : ''}<span class="p-to">${to}</span><button class="p-copy" type="button" data-prompt="${i}">복사</button></div>
+    <div class="p-text${b.long ? ' clip' : ''}" id="ptext-${i}"${b.long ? ' tabindex="0"' : ''}>${body}</div>
+    ${b.long ? `<div class="p-foot"><button type="button" data-expand="ptext-${i}" aria-expanded="false">전체 펼치기</button></div>` : ''}
+  </div>`;
+}
+const NOTE_TAG = {check:'확인', warn:'주의', tip:'참고'};
+const BLOCK = {
+  p: b => `<p>${b.x}</p>`,
+  ol: b => `<div class="grp">${b.h ? `<h3 class="sub">${b.h}</h3>` : ''}<ol class="steps">${b.items.map((x, i) => `<li><b>${i + 1}</b><span>${x}</span></li>`).join('')}</ol></div>`,
+  ul: b => `<div class="grp">${b.h ? `<h3 class="sub">${b.h}</h3>` : ''}<ul class="dots">${b.items.map(x => `<li>${x}</li>`).join('')}</ul></div>`,
+  cols: b => `<div class="cols">${b.items.map(block).join('')}</div>`,
+  note: b => `<div class="note ${b.k}"><b class="tag">${NOTE_TAG[b.k]}</b><span>${b.x}</span></div>`,
+  cards: b => `<div class="grp">${b.h ? `<h3 class="sub">${b.h}</h3>` : ''}<div class="cards">${b.items.map(c => `<div class="card">${c.tag ? `<span class="tag">${c.tag}</span>` : ''}<strong>${c.h}</strong>${c.em ? `<em>${c.em}</em>` : ''}<span>${c.x}</span></div>`).join('')}</div></div>`,
+  flow: b => `<div class="flow">${b.items.map((n, i) => `${i ? '<span class="edge" aria-hidden="true"></span>' : ''}<div class="node${n.end ? ' end' : ''}">${n.tag ? `<small>${n.tag}</small>` : ''}<strong>${n.h}</strong><span>${n.x}</span></div>`).join('')}</div>`,
+  chips: b => `<div class="chips"><span class="chips-h">${b.h}</span>${b.items.map(x => `<span class="chip">${x}</span>`).join('')}</div>`,
+  code: b => `<div class="grp"><h3 class="sub">${b.h}</h3><code class="url">${esc(b.x)}</code></div>`,
+  prompt: promptHTML,
+  table: b => `<div class="grp">${b.cap ? `<h3 class="sub">${b.cap}</h3>` : ''}<div class="tbl"><table><thead><tr>${b.head.map(h => `<th>${h}</th>`).join('')}</tr></thead><tbody>${b.rows.map(r => `<tr>${r.map(c => typeof c === 'string' ? `<td>${c}</td>` : `<td>${copyBtn(c.c)}${c.x}</td>`).join('')}</tr>`).join('')}</tbody></table></div></div>`,
+  checktable: b => `<div class="tbl"><table><thead><tr><th class="c">확인</th>${b.head.map(h => `<th>${h}</th>`).join('')}</tr></thead><tbody>${b.rows.map((r, i) => `<tr><td class="c"><input type="checkbox" id="k-${b.id}-${i}" data-keep aria-label="${esc(r[0])} 확인"></td><td><label for="k-${b.id}-${i}"><b>${r[0]}</b></label></td><td>${r[1]}</td></tr>`).join('')}</tbody></table></div>`,
+  matrix: b => `<div class="tbl"><table><thead><tr>${b.head.map((h, i) => `<th${i ? ' class="c"' : ''}>${h}</th>`).join('')}</tr></thead><tbody>${b.rows.map((r, i) => `<tr><td>${r}</td>${[1, 2, 3].map(j => `<td class="c"><input type="checkbox" id="k-${b.id}-${i}-${j}" data-keep aria-label="${esc(r)} · 이슈 ${j}"></td>`).join('')}</tr>`).join('')}</tbody></table></div>`,
+  checks: b => `<ul class="checks">${b.items.map((c, i) => `<li><label><input type="checkbox" id="k-${b.id}-${i}" data-keep><span><b>${c.h}</b>${c.x ? `<span>${c.x}</span>` : ''}</span></label></li>`).join('')}</ul>`,
+  pairs: b => `<div class="pairs"><div class="pair pairs-h" aria-hidden="true"><span>${b.head[0]}</span><span></span><span>${b.head[1]}</span></div>${b.items.map(p => `<div class="pair"><div class="bad">${p[0]}</div><div class="arr" aria-hidden="true"></div><div class="good"><span>${p[1]}</span>${copyBtn(p[1])}</div></div>`).join('')}</div>`,
+  wire: () => `<div class="wire" role="img" aria-label="매출 분석 대시보드 화면 구성. 위에서부터 조회 조건, 핵심 지표, 추이와 구성 순서입니다.">
+    <div class="w-row" style="--n:3"><i class="w-n">1</i><span class="w-box">기간</span><span class="w-box">제품군</span><span class="w-box">거래처</span></div>
+    <div class="w-row" style="--n:3"><i class="w-n">2</i><span class="w-box kpi">총매출</span><span class="w-box kpi">거래 건수</span><span class="w-box kpi">전월 대비</span></div>
+    <div class="w-row" style="--n:2"><i class="w-n">3</i><span class="w-box pane">월별 매출 추이</span><span class="w-box pane">제품군별 매출</span></div>
+  </div>`,
+  rss: () => `<div class="rss">
+    <label for="rss-kw">확인할 키워드</label>
+    <div class="rss-row"><input class="field" id="rss-kw" type="text" value="강관" autocomplete="off" spellcheck="false"><a class="go pri plain" id="rss-open" href="#" target="_blank" rel="noopener"><span>RSS 주소 열기</span><b aria-hidden="true">↗</b></a><button class="btn" type="button" data-act="copy-rss">주소 복사</button></div>
+    <div class="chips"><span class="chips-h">예시 키워드</span>${['강관','유정용 강관','철강 관세','열연 가격'].map(k => `<button class="kw" type="button" data-kw="${k}">${k}</button>`).join('')}</div>
+    <code class="url" id="rss-url"></code>
+  </div>`,
+  mine: () => `<form class="mine" id="mine-form">
+    <h3 class="sub">내 업무 상황 추가</h3>
+    <div class="mine-grid">
+      <label>상황<input class="field" id="my-s" type="text" placeholder="예: 주간 보고 준비" autocomplete="off"></label>
+      <label>사용 앱<input class="field" id="my-a" type="text" placeholder="예: Gmail · Drive" autocomplete="off"></label>
+      <label class="wide">요청문<textarea class="field" id="my-p" rows="3" placeholder="대상, 요청 작업, 조건, 형식 순으로 적어 봅니다."></textarea></label>
+      <label class="wide">확인 사항<input class="field" id="my-c" type="text" placeholder="예: 기한, 문서의 최신 여부" autocomplete="off"></label>
+    </div>
+    <div class="act"><button class="btn" type="button" data-act="copy-mine">표 전체 복사</button><span class="muted">Google Sheets에 붙여 넣으면 칸에 맞춰 들어갑니다. 여기에 적은 내용은 저장되지 않습니다.</span></div>
+  </form>`
+};
+function block(b){ return BLOCK[b.t](b); }
+
+/* ── 화면 ── */
+function pager(id){
+  const i = VIEWS.indexOf(id), p = VIEWS[i - 1], n = VIEWS[i + 1];
+  return `<nav class="pager" aria-label="이전 · 다음">${p ? `<a class="prev" href="#${p}"><small>이전</small>${VIEW_NAME[p]}</a>` : ''}${n ? `<a class="next" href="#${n}"><small>다음</small>${VIEW_NAME[n]}</a>` : ''}</nav>`;
+}
+function viewModule(m){
+  let stage = null, html = '';
+  m.steps.forEach((s, i) => {
+    if (s.stage && s.stage !== stage){
+      const g = m.stages[s.stage];
+      html += `<div class="stage"><div class="stage-t"><small>${g.eb}${g.sub ? ' · ' + g.sub : ''}</small><strong>${g.name}</strong></div>${g.tool ? launch(g.tool) : ''}</div>`;
+    }
+    stage = s.stage || null;
+    html += `<section class="step" id="${s.id}" tabindex="-1" aria-labelledby="h-${s.id}">
+      <div class="step-head">
+        <span class="num" aria-hidden="true">${i + 1}</span>
+        <div class="step-t"><span class="eb">${m.eb} · ${s.eb}</span><h2 id="h-${s.id}">${s.title}</h2></div>
+        <label class="done"><input class="sr" type="checkbox" id="done-${s.id}" data-keep data-step="${s.id}"><span>완료</span></label>
+      </div>
+      ${s.tools ? `<div class="launch">${s.tools.map(launch).join('')}</div>` : ''}
+      ${s.blocks.map(block).join('')}
+    </section>`;
+  });
+  return `<header class="sec-head">
+      <p class="eb">${m.eb} · ${m.nav}</p>
+      <h1>${m.title}</h1>
+      <p class="lead">${m.lead}</p>
+      <div class="out"><span class="out-h">산출물</span><div><strong>${m.out}</strong>${m.outNote ? `<span>${m.outNote}</span>` : ''}</div></div>
+      <div class="launch">${m.tools.map(launch).join('')}</div>
+      <div class="prog"><div class="prog-bar"><i data-bar="${m.id}"></i></div><span data-progtext="${m.id}"></span></div>
+      <ol class="toc" aria-label="단계">${m.steps.map((s, i) => `<li><a href="#${s.id}" data-toc="${s.id}">${i + 1}. ${s.title}</a></li>`).join('')}</ol>
+    </header>${html}${pager(m.id)}`;
+}
+function viewStart(){
+  const tool = (key, name, host, use, mods) => `<div class="tool">
+    <div class="tool-h"><i class="mono ${key}" aria-hidden="true">${TOOLS[key].mono}</i><strong>${name}</strong></div>
+    <div class="tool-meta"><code>${host}</code><span>${use}</span><small>사용 모듈 ${mods}</small></div>
+    ${launch(key, '바로가기')}
+    <label class="tool-ok"><input type="checkbox" id="k-ready-${key}" data-keep>열리는 것을 확인했습니다</label>
+  </div>`;
+  return `<header class="sec-head">
+      <p class="eb">바이브코딩으로 시작하는 업무자동화</p>
+      <h1>강의 도우미</h1>
+      <p class="lead">교안과 같은 순서로 실습을 따라갑니다. 단계마다 실습 도구 바로가기와 복사해서 쓰는 요청문이 있습니다.</p>
+    </header>
+    <section class="block" aria-labelledby="h-prep">
+      <h2 id="h-prep">실습 준비</h2>
+      <div class="tools">
+        ${tool('gemini','Gemini 앱','gemini.google.com','일정·메일·문서 처리, 보고서 초안 작성','①, ④')}
+        ${tool('studio','Google AI Studio','aistudio.google.com/apps','웹앱과 AI 에이전트 제작','②, ③, ④')}
+        ${tool('notebook','Gemini Notebook','notebooklm.google.com','자료에 근거한 이슈·출처 정리. 기존 NotebookLM 주소로 접속합니다.','④')}
+      </div>
+      <div class="cards">
+        <div class="card"><strong>샘플 데이터 사용</strong><span>실제 고객 정보와 대외비 자료는 입력하지 않습니다.</span></div>
+        <div class="card"><strong>계정 연결 확인</strong><span>회사 계정은 관리자 설정에 따라 일부 기능이 제한될 수 있습니다.</span></div>
+        <div class="card"><strong>공유 범위 확인</strong><span>AI Studio 앱은 기본 비공개이며, 공유 시 상대방이 코드도 열람 가능합니다.</span></div>
+        <div class="card"><strong>결과 대조</strong><span>AI가 생성한 수치와 문장은 원본과 대조한 후 사용합니다.</span></div>
+      </div>
+    </section>
+    <section class="block" aria-labelledby="h-how">
+      <h2 id="h-how">이 페이지 사용 방법</h2>
+      <ol class="steps">
+        <li><b>1</b><span>강사 화면의 교안 제목과 같은 단계를 찾습니다. 단계 제목은 교안 슬라이드 제목과 같습니다.</span></li>
+        <li><b>2</b><span>바로가기 버튼을 눌러 실습 도구를 새 탭에서 엽니다.</span></li>
+        <li><b>3</b><span>남색 요청문의 복사 버튼을 누르고 도구 입력창에 붙여 넣습니다. 점선 빈칸에 내용을 적으면 복사할 때 함께 들어갑니다.</span></li>
+        <li><b>4</b><span>단계를 마치면 완료를 누릅니다. 진행 표시는 이 브라우저에만 저장됩니다.</span></li>
+      </ol>
+    </section>
+    <section class="block" aria-labelledby="h-course">
+      <h2 id="h-course">과정 구성</h2>
+      <div class="cards">${MODS.map(m => `<a class="card" href="#${m.id}"><span class="tag">${m.eb} · ${m.nav}</span><strong>${m.title}</strong><span>산출물 · ${m.out}</span><span class="more" data-progtext="${m.id}"></span></a>`).join('')}</div>
+      <p class="muted">Gemini를 기본 도구로 사용하며, 다양한 LLM과 자동화 도구를 함께 활용합니다.</p>
+    </section>
+    <section class="block" aria-labelledby="h-vibe">
+      <h2 id="h-vibe">바이브코딩 작업 방식</h2>
+      <p>코드를 직접 작성하지 않고, 만들고자 하는 결과물을 문장으로 설명하여 AI가 구현하도록 하는 방식입니다.</p>
+      ${BLOCK.flow({items:[
+        {tag:'1', h:'설명', x:'제작할 대상과 사용할 데이터, 화면 구성을 기술합니다.'},
+        {tag:'2', h:'생성', x:'AI가 코드와 화면을 생성합니다.'},
+        {tag:'3', h:'확인', x:'실제 데이터로 실행하여 결과를 대조합니다.'},
+        {tag:'4', h:'수정', x:'문제 증상을 기술하여 수정을 요청합니다.', end:1}]})}
+      <p>모든 실습은 위 네 단계를 반복하여 진행합니다. 한 번에 완성하기보다 확인과 수정을 거듭하여 완성도를 높입니다.</p>
+    </section>
+    <section class="block">
+      <div class="act"><button class="btn" type="button" id="reset" data-act="reset">진행 표시 모두 지우기</button><span class="muted">완료 표시와 체크 항목을 처음 상태로 되돌립니다.</span></div>
+    </section>
+    ${pager('start')}`;
+}
+function viewWrap(){
+  return `<header class="sec-head">
+      <p class="eb">정리</p>
+      <h1>실습 산출물과 작업 방식</h1>
+    </header>
+    <section class="block" aria-labelledby="h-outs">
+      <h2 id="h-outs">실습 산출물</h2>
+      <div class="cards">${MODS.map(m => `<a class="card" href="#${m.id}"><span class="tag">${m.eb}</span><strong>${m.out}</strong><span class="more" data-progtext="${m.id}"></span></a>`).join('')}</div>
+    </section>
+    <section class="block" aria-labelledby="h-way">
+      <h2 id="h-way">작업 방식</h2>
+      <ul class="dots"><li>문장으로 설명하여 제작합니다</li><li>증상을 기술하여 수정합니다</li><li>근거를 확인한 후 사용합니다</li></ul>
+      <div class="note tip"><b class="tag">참고</b><span>이후 실습에서는 MCP 연동을 통한 고객 문의 처리 자동화와 개인별 미니 프로젝트를 진행합니다.</span></div>
+    </section>
+    ${pager('wrap')}`;
+}
+
+/* ── 왼쪽 노선도 ── */
+function renderNav(){
+  const cur = a => a === current ? ' aria-current="page"' : '';
+  $('#nav').innerHTML = `<a class="nav-btn" href="#start"${cur('start')}>시작하기</a>
+    <div class="route">${MODS.map(m => {
+      let stage = null;
+      const links = current !== m.id ? '' : `<div class="sub-nav">${m.steps.map(s => {
+        const g = s.stage && s.stage !== stage ? `<div class="sg">${m.stages[s.stage].eb} · ${m.stages[s.stage].name}</div>` : '';
+        stage = s.stage || null;
+        return `${g}<a class="sl" href="#${s.id}" data-sl="${s.id}"><i class="ck" aria-hidden="true"></i><span>${s.title}</span></a>`;
+      }).join('')}</div>`;
+      return `<a class="nav-btn stop" href="#${m.id}"${cur(m.id)}><span class="dot" aria-hidden="true"></span><span class="st"><small>${m.eb}</small>${m.nav}</span><span class="cnt" data-cnt="${m.id}"></span></a>${links}`;
+    }).join('')}</div>
+    <a class="nav-btn" href="#wrap"${cur('wrap')}>정리</a>`;
+  refresh();
+}
+
+/* ── 진행 표시 ── */
+function refresh(){
+  MODS.forEach(m => {
+    const n = m.steps.length, d = m.steps.filter(s => store.data['done-' + s.id]).length;
+    $$(`[data-cnt="${m.id}"]`).forEach(e => { e.textContent = d + '/' + n; });
+    $$(`[data-bar="${m.id}"]`).forEach(e => { e.style.width = (d / n * 100) + '%'; });
+    $$(`[data-progtext="${m.id}"]`).forEach(e => { e.textContent = `${n}단계 중 ${d}단계 완료`; });
+    m.steps.forEach(s => {
+      const ok = !!store.data['done-' + s.id];
+      const sec = document.getElementById(s.id); if (sec) sec.classList.toggle('is-done', ok);
+      $$(`[data-sl="${s.id}"],[data-toc="${s.id}"]`).forEach(e => e.classList.toggle('ok', ok));
+    });
+  });
+}
+function hydrate(){ $$('input[data-keep]').forEach(i => { i.checked = !!store.data[i.id]; }); }
+
+/* ── 이동 ── */
+function show(view){
+  current = view;
+  VIEWS.forEach(v => { document.getElementById('view-' + v).hidden = v !== view; });
+  renderNav();
+}
+function go(id, focus){
+  const view = VIEWS.includes(id) ? id : (STEP_VIEW[id] || 'start');
+  show(view);
+  const el = STEP_VIEW[id] ? document.getElementById(id) : null;
+  if (el){ el.scrollIntoView(); if (focus) el.focus({preventScroll:true}); }
+  else window.scrollTo(0, 0);
+  spy();
+}
+function spy(){
+  if (!MODS.some(m => m.id === current)) return;
+  let cur = null;
+  $$(`#view-${current} .step`).forEach(s => { if (s.getBoundingClientRect().top <= 160) cur = s.id; });
+  $$('.sl').forEach(a => a.classList.toggle('cur', a.dataset.sl === cur));
+}
+
+/* ── 복사 ── */
+function legacyCopy(text){
+  const ta = document.createElement('textarea');
+  ta.value = text; ta.setAttribute('readonly', ''); ta.style.position = 'fixed'; ta.style.top = '0'; ta.style.opacity = '0';
+  document.body.appendChild(ta); ta.select();
+  let ok = false; try{ ok = document.execCommand('copy'); }catch(e){}
+  ta.remove(); return ok;
+}
+async function copy(text){
+  try{ await navigator.clipboard.writeText(text); return true; }catch(e){ return legacyCopy(text); }
+}
+function flash(btn, ok){
+  const old = btn.dataset.label || btn.textContent;
+  btn.dataset.label = old; btn.textContent = ok ? '복사됨' : '복사 실패'; btn.classList.toggle('did', ok);
+  clearTimeout(btn._t); btn._t = setTimeout(() => { btn.textContent = old; btn.classList.remove('did'); }, 1800);
+}
+let toastTimer;
+function toast(html){
+  const t = $('#toast'); t.innerHTML = html; t.hidden = false;
+  clearTimeout(toastTimer); toastTimer = setTimeout(() => { t.hidden = true; }, 6000);
+}
+function promptText(i){
+  return PROMPTS[i].x.replace(/\{\{(.+?)\}\}/g, (_, k) => (SLOTS[k] || '').trim() || '[' + k + ']');
+}
+function selectNode(el){
+  try{ const r = document.createRange(); r.selectNodeContents(el); const s = getSelection(); s.removeAllRanges(); s.addRange(r); }catch(e){}
+}
+function sizeSlot(el){
+  const v = el.value || el.placeholder; let w = 0;
+  for (const ch of v) w += ch.charCodeAt(0) > 0x2e7f ? 1.85 : 1;
+  el.style.width = (w + 2.5) + 'ch';
+}
+function rssUpdate(){
+  const kw = $('#rss-kw').value.trim(), a = $('#rss-open'), u = $('#rss-url');
+  if (!kw){ a.setAttribute('aria-disabled', 'true'); a.removeAttribute('href'); u.textContent = '키워드를 입력하면 주소가 만들어집니다.'; return; }
+  a.removeAttribute('aria-disabled');
+  a.href = 'https://news.google.com/rss/search?q=' + encodeURIComponent(kw) + '&hl=ko&gl=KR&ceid=KR:ko';
+  u.textContent = 'https://news.google.com/rss/search?q=' + kw + '&hl=ko&gl=KR&ceid=KR:ko';
+}
+
+/* ── 시작 ── */
+store.load();
+$('#views').innerHTML =
+  `<div id="view-start">${viewStart()}</div>` +
+  MODS.map(m => `<div id="view-${m.id}" hidden>${viewModule(m)}</div>`).join('') +
+  `<div id="view-wrap" hidden>${viewWrap()}</div>`;
+$('#dock').innerHTML = `<span class="dock-h">실습 도구 바로가기</span>` + ['gemini','studio','notebook'].map(launch).join('');
+hydrate();
+$$('.slot').forEach(sizeSlot);
+rssUpdate();
+
+document.addEventListener('click', async e => {
+  const link = e.target.closest('a[href^="#"]');
+  if (link){
+    e.preventDefault();
+    const id = link.getAttribute('href').slice(1);
+    try{ history.replaceState(null, '', '#' + id); }catch(err){}
+    go(id, !!STEP_VIEW[id]);
+    return;
+  }
+  const b = e.target.closest('button'); if (!b) return;
+  if (b.dataset.prompt){
+    const i = +b.dataset.prompt, p = PROMPTS[i], ok = await copy(promptText(i));
+    flash(b, ok);
+    if (ok) toast(`<span>복사했습니다. ${p.to ? TOOLS[p.to].name + ' 입력창에 붙여 넣습니다.' : '입력창에 붙여 넣습니다.'}</span>${p.to ? launch(p.to) : ''}`);
+    else { selectNode($('#ptext-' + i)); toast('<span>자동 복사가 막혀 있습니다. 요청문을 선택해 두었으니 Ctrl+C로 복사합니다.</span>'); }
+  } else if (b.dataset.copy){
+    flash(b, await copy(COPY[+b.dataset.copy]));
+  } else if (b.dataset.expand){
+    const el = document.getElementById(b.dataset.expand), open = el.classList.toggle('clip') === false;
+    b.textContent = open ? '접기' : '전체 펼치기'; b.setAttribute('aria-expanded', String(open));
+  } else if (b.dataset.kw){
+    $('#rss-kw').value = b.dataset.kw; rssUpdate();
+  } else if (b.dataset.act === 'copy-rss'){
+    const kw = $('#rss-kw').value.trim(); if (kw) flash(b, await copy($('#rss-url').textContent));
+  } else if (b.dataset.act === 'copy-mine'){
+    const rows = [['상황','사용 앱','요청문','확인 사항'],
+      ['주간 일정 점검','Calendar','금주 일정을 요일별로 정리하고 중복 일정 표시','누락·중복 일정'],
+      ['거래처 요청 정리','Gmail','최근 메일에서 요청사항과 기한을 표로 추출','근거 메일, 기한'],
+      ['회의 준비','Calendar · Gmail · Drive','참석자, 쟁점, 관련 문서를 종합하여 준비 메모 작성','문서의 최신 여부']];
+    const mine = ['my-s','my-a','my-p','my-c'].map(id => $('#' + id).value.replace(/\s+/g, ' ').trim());
+    if (mine.some(Boolean)) rows.push(mine);
+    flash(b, await copy(rows.map(r => r.join('\t')).join('\n')));
+  } else if (b.dataset.act === 'reset'){
+    if (b.dataset.armed){ store.clear(); hydrate(); refresh(); delete b.dataset.armed; b.textContent = '모두 지웠습니다'; setTimeout(() => { b.textContent = '진행 표시 모두 지우기'; }, 2000); }
+    else { b.dataset.armed = '1'; b.textContent = '한 번 더 누르면 지워집니다'; setTimeout(() => { if (b.dataset.armed){ delete b.dataset.armed; b.textContent = '진행 표시 모두 지우기'; } }, 4000); }
+  }
+});
+document.addEventListener('change', e => {
+  const i = e.target;
+  if (i.matches && i.matches('input[data-keep]')){
+    if (i.checked) store.data[i.id] = 1; else delete store.data[i.id];
+    store.save(); refresh();
+  }
+});
+document.addEventListener('input', e => {
+  const i = e.target;
+  if (i.classList && i.classList.contains('slot')){
+    SLOTS[i.dataset.slot] = i.value;
+    $$('.slot').forEach(s => { if (s.dataset.slot === i.dataset.slot){ if (s !== i) s.value = i.value; sizeSlot(s); } });
+  } else if (i.id === 'rss-kw') rssUpdate();
+});
+document.addEventListener('submit', e => e.preventDefault());
+let ticking = false;
+window.addEventListener('scroll', () => { if (!ticking){ ticking = true; requestAnimationFrame(() => { ticking = false; spy(); }); } }, {passive:true});
+const fromHash = () => { try{ return decodeURIComponent((location.hash || '').slice(1)); }catch(e){ return ''; } };
+window.addEventListener('hashchange', () => go(fromHash()));
+go(fromHash());
+})();
+</script>
+
+</body></html>

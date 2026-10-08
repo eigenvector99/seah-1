@@ -15,7 +15,7 @@
   --strong:#17212b; --on-strong:#f1eee7;
   --navy:#17212b; --navy-line:#33445a; --navy-wash:rgba(241,238,231,.09);
   --on-navy:#ece9e1; --on-navy-2:#a9b6c2; --on-navy-accent:#f29a6b;
-  --t-gemini:#2a6592; --t-studio:#b8400c; --t-notebook:#2c6a4c; --on-tile:#fcfbf8;
+  --t-gemini:#2a6592; --t-studio:#b8400c; --t-notebook:#2c6a4c; --t-sheets:#46525e; --on-tile:#fcfbf8;
   --shadow:0 14px 36px rgba(23,33,43,.2);
   --f-display:'IBM Plex Sans KR','Apple SD Gothic Neo','Malgun Gothic',sans-serif;
   --f-body:'Noto Sans KR','Apple SD Gothic Neo','Malgun Gothic',system-ui,sans-serif;
@@ -102,7 +102,7 @@ code{font-family:var(--f-mono);font-size:.88em;background:var(--shelf);padding:.
 .go.pri:hover{border-color:var(--on-navy-accent)}
 .go.pri.plain{padding-left:14px}
 .mono{flex:none;display:grid;place-items:center;width:28px;height:28px;border-radius:7px;font-family:var(--f-display);font-style:normal;font-size:12px;font-weight:700;color:var(--on-tile)}
-.mono.gemini{background:var(--t-gemini)} .mono.studio{background:var(--t-studio)} .mono.notebook{background:var(--t-notebook)}
+.mono.gemini{background:var(--t-gemini)} .mono.studio{background:var(--t-studio)} .mono.notebook{background:var(--t-notebook)} .mono.sheets{background:var(--t-sheets)}
 .dock .go{justify-content:flex-start}
 .dock .go b{margin-left:auto}
 
@@ -134,8 +134,9 @@ code{font-family:var(--f-mono);font-size:.88em;background:var(--shelf);padding:.
 .stage + .step{border-top:0}
 .step:focus{outline:none}
 .step-head{display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:14px;align-items:start}
-.num{display:grid;place-items:center;width:34px;height:34px;margin-top:2px;border-radius:50%;background:var(--strong);color:var(--on-strong);font-family:var(--f-display);font-size:15px;font-weight:700;font-variant-numeric:tabular-nums}
-.step.is-done .num{background:var(--ok);color:var(--paper)}
+.num{display:grid;place-items:center;width:26px;height:26px;margin-top:5px;border-radius:50%;border:2px solid var(--line);color:transparent;font-size:14px;font-weight:700}
+.num::after{content:"✓"}
+.step.is-done .num{background:var(--ok);border-color:var(--ok);color:var(--paper)}
 .step-t{display:flex;flex-direction:column;gap:2px;min-width:0}
 .step-t h2{font-family:var(--f-display);font-size:22px;font-weight:700;line-height:1.32;text-wrap:balance}
 .done{display:inline-flex;align-items:center;gap:6px;margin-top:3px;padding:5px 12px;border:1.5px solid var(--line);border-radius:999px;background:var(--card);font-size:13px;font-weight:600;color:var(--ink-2);cursor:pointer;white-space:nowrap;user-select:none}
@@ -188,6 +189,7 @@ a.card:hover{border-color:var(--accent)}
 .node strong{font-family:var(--f-display);font-size:15px}
 .node span{font-size:13px;color:var(--ink-2)}
 .node.end{background:var(--shelf)}
+.node .nr{margin-top:6px;padding-top:6px;border-top:1px solid var(--line);font-style:normal;font-size:12.5px;font-weight:600;color:var(--ink)}
 .edge{flex:0 0 auto;align-self:center;color:var(--accent);font-weight:700}
 .edge::before{content:"→"}
 .chips{display:flex;flex-wrap:wrap;align-items:center;gap:6px}
@@ -250,7 +252,7 @@ td.c input[type="checkbox"]{margin:2px 0 0}
 .act{display:flex;flex-wrap:wrap;align-items:center;gap:8px 14px}
 
 /* ── 시작 화면 ── */
-.tools{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px}
+.tools{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px}
 .tool{display:flex;flex-direction:column;gap:10px;min-width:0;padding:18px;border:1px solid var(--line);border-radius:14px;background:var(--card)}
 .tool-h{display:flex;align-items:center;gap:10px}
 .tool-h .mono{width:36px;height:36px;border-radius:9px;font-size:14px}
@@ -268,6 +270,50 @@ td.c input[type="checkbox"]{margin:2px 0 0}
 .pager a small{font-size:11.5px;font-weight:600;color:var(--ink-3)}
 .pager a:hover{border-color:var(--accent)}
 .pager .next{margin-left:auto;text-align:right}
+
+/* ── 웹앱 교안 흐름: 역할 · 위치 · 질문 · 주제 ── */
+.goal{display:grid;grid-template-columns:auto minmax(0,1fr);gap:4px 12px;align-items:baseline;max-width:46em;color:var(--ink-2)}
+.goal b{font-size:12px;font-weight:700;letter-spacing:.06em;color:var(--accent)}
+.gate{font-size:13.5px;color:var(--ink-3);max-width:46em}
+.roles{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px}
+.role{display:flex;flex-direction:column;gap:6px;min-width:0;padding:14px 16px;border:1px solid var(--line);border-radius:12px;background:var(--card)}
+.role .chip-l{font-size:11.5px;font-weight:700;letter-spacing:.04em}
+.role strong{font-family:var(--f-display);font-size:15.5px}
+.role.h .chip-l{color:var(--ink-3)} .role.a .chip-l{color:var(--blue)} .role.v .chip-l{color:var(--ok)}
+.role.no{grid-column:1/-1;border-color:transparent;background:var(--accent-tint)} .role.no .chip-l{color:var(--accent)}
+.role ul.dots{gap:4px;font-size:14.5px}
+.route-dl{display:grid;grid-template-columns:auto minmax(0,1fr);gap:8px 16px;margin:0;padding:14px 18px;border:1px solid var(--line);border-radius:12px;background:var(--card);font-size:14.5px}
+.route-dl dt{padding-top:2px;font-size:12.5px;font-weight:700;color:var(--accent);white-space:nowrap}
+.route-dl dd{margin:0;min-width:0}
+.asks{display:flex;flex-direction:column;gap:10px}
+.ask{display:flex;flex-direction:column;gap:6px;min-width:0;padding:14px 16px;border:1px solid var(--line);border-radius:12px;background:var(--card)}
+.ask label{font-size:15px;font-weight:600;line-height:1.5}
+.ask small{font-size:13px;color:var(--ink-3)}
+textarea.field{min-height:4.6em;resize:vertical;line-height:1.6}
+.note.wait{background:var(--shelf)} .note.wait b.tag{color:var(--ink-2)}
+.note.stuck{background:var(--blue-tint)} .note.stuck b.tag{color:var(--blue)}
+.card.hi{border:2px solid var(--accent)}
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:10px}
+.stat{display:flex;flex-direction:column;padding:12px 16px;border-radius:12px;background:var(--shelf)}
+.stat strong{font-family:var(--f-display);font-size:24px;font-variant-numeric:tabular-nums}
+.stat span{font-size:13.5px;color:var(--ink-2)}
+.topics{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:10px}
+.topic{display:flex;flex-direction:column;align-items:flex-start;gap:6px;min-width:0;padding:14px 16px;border:1.5px solid var(--line);border-radius:12px;background:var(--card);text-align:left;cursor:pointer}
+.topic:hover{border-color:var(--accent)}
+.topic[aria-pressed="true"]{border-color:var(--accent);background:var(--accent-tint)}
+.topic strong{font-family:var(--f-display);font-size:15.5px;line-height:1.4}
+.topic .pb{font-size:13.5px;line-height:1.55;color:var(--ink-2)}
+.tmeta{display:flex;flex-wrap:wrap;gap:4px}
+.tmeta i{padding:1px 8px;border-radius:999px;background:var(--shelf);font-style:normal;font-size:11.5px;font-weight:600;color:var(--ink-2)}
+.kw[aria-pressed="true"]{background:var(--strong);border-color:var(--strong);color:var(--on-strong)}
+.tsel{display:flex;flex-direction:column;gap:10px;padding:16px 18px;border:1px solid var(--line);border-radius:12px;background:var(--card)}
+.tsel-h{display:flex;flex-wrap:wrap;align-items:baseline;gap:4px 10px}
+.tsel-h small{font-size:12px;font-weight:700;color:var(--accent)}
+.tsel-h strong{font-family:var(--f-display);font-size:17px}
+.tsel-h a{margin-left:auto;font-size:13px;color:var(--blue)}
+.spec{display:grid;grid-template-columns:auto minmax(0,1fr);gap:6px 16px;margin:0;font-size:14.5px}
+.spec dt{padding-top:2px;font-size:12.5px;font-weight:700;color:var(--ink-3);white-space:nowrap}
+.spec dd{margin:0;min-width:0}
 
 /* ── 알림창 ── */
 .toast{position:fixed;left:50%;bottom:calc(22px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);display:flex;align-items:center;gap:12px;max-width:min(560px,calc(100vw - 32px));padding:10px 12px 10px 18px;border-radius:12px;background:var(--strong);color:var(--on-strong);box-shadow:var(--shadow);font-size:14px;line-height:1.5;z-index:60}
@@ -306,6 +352,8 @@ td.c input[type="checkbox"]{margin:2px 0 0}
   .pager a{max-width:none;flex:1}
 }
 @media (max-width:520px){
+  .route-dl,.spec{grid-template-columns:minmax(0,1fr);gap:2px}
+  .route-dl dd,.spec dd{margin-bottom:8px}
   .step-head{grid-template-columns:auto minmax(0,1fr)}
   .done{grid-column:2;justify-self:start}
   .p-to{margin-left:0;flex-basis:100%;order:3}
@@ -341,9 +389,7 @@ const TOOLS = {
   gmail:   {label:'Gmail 열기', url:'https://mail.google.com/'},
   drive:   {label:'Drive 열기', url:'https://drive.google.com/'},
   docs:    {label:'Google Docs 열기', url:'https://docs.google.com/document/'},
-  sheets:  {label:'Google Sheets 열기', url:'https://docs.google.com/spreadsheets/'},
-  chatgpt: {label:'ChatGPT 열기', url:'https://chatgpt.com/'},
-  claude:  {label:'Claude 열기', url:'https://claude.ai/'}
+  sheets:  {label:'Google Sheets 열기', name:'Google Sheets', tile:'S', url:'https://sheets.google.com/'}
 };
 
 /* ── 모듈 ④ 대시보드 요청문 (교안 요청문 1/4 ~ 4/4 전문) ── */
@@ -399,9 +445,48 @@ const P_NEWS = R`구글 뉴스 RSS로 산업 뉴스를 모아 보여주는 '산�
 - 우측: 기사 카드 목록, 맨 아래에 선택 기사 복사 바 고정
 - 깔끔한 업무용 디자인, 모든 텍스트는 한국어`;
 
+
+/* ── 수강생이 적은 답변: 이 브라우저에만 저장(막혀 있으면 메모리로만 동작) ── */
+const ANS_KEY = 'vibe-helper-answers-v1';
+const ANS_DEFAULT = {'m6.topic':'monthly-report', 'm6.filter':'all'};
+let ANS = Object.assign({}, ANS_DEFAULT);
+try{ const v = JSON.parse(localStorage.getItem(ANS_KEY) || '{}'); if (v && typeof v === 'object') ANS = Object.assign({}, ANS_DEFAULT, v); }catch(e){}
+function saveAns(){ try{ localStorage.setItem(ANS_KEY, JSON.stringify(ANS)); }catch(e){} }
+function a(key, fallback){ return String(ANS[key] || '').trim() || (fallback === undefined ? '[직접 입력]' : fallback); }
+/* 모듈 ③ 요청문: 앞 문장 + "- 항목: 내 답변" 목록 + 뒷 문장 */
+function L3(lead, fields, tail, fb){
+  return () => [lead, fields.map(([label, key]) => `- ${label}: ${a(key, fb || '[입력]')}`).join('\n'), tail].filter(Boolean).join('\n\n');
+}
+
+/* ── 모듈 ⑥–⑧ 프로젝트 주제 카드 ── */
+const TOPICS = [
+  {id:'monthly-report', category:'data', difficulty:'입문', connection:'단일 HTML', title:'월간 실적 취합·보고 대시보드', target:'자금·생산계획·구매·영업', problem:'여러 표에서 반복적으로 실적을 모으고 회의자료를 만드는 업무', input:'기준 월, 부서, 항목, 계획 값, 실제 값, 비고', output:'합계, 달성률, 월별·부서별 표와 그래프, 인쇄용 요약', mvp:'샘플 데이터 → 합계·달성률 계산 → 필터 → 인쇄', prompt:'월간 실적 데이터를 입력하거나 CSV로 불러와 계획 대비 실적과 달성률을 보여주는 대시보드'},
+  {id:'energy-unit', category:'data', difficulty:'보통', connection:'단일 HTML', title:'전력비·에너지 원단위 분석', target:'설비보전·에너지환경', problem:'매월 전력 사용량·전력비·생산량을 취합해 원단위를 계산하는 업무', input:'월, 사업장, 전력 사용량, 전력비, 생산량', output:'원단위, 전월 대비 증감, 사업장 비교, 이상 구간 강조', mvp:'원단위 계산 → 월별 추이 → 10% 이상 증감 강조', prompt:'전력 사용량과 생산량으로 에너지 원단위를 계산하고 월별 추이를 비교하는 대시보드'},
+  {id:'quality-analysis', category:'data', difficulty:'보통', connection:'단일 HTML', title:'품질 데이터 집계·이상 탐색', target:'QM·품질관리', problem:'반복되는 품질 데이터를 분류하고 이상 항목을 찾아 보고하는 업무', input:'발생일, 공정, 제품, 불량 유형, 수량, 조치 상태', output:'유형별·공정별 집계, 상위 항목, 미조치 목록', mvp:'데이터 입력 → 유형 집계 → 필터 → 미조치 강조', prompt:'품질 기록을 공정과 불량 유형별로 집계하고 미조치 건을 강조하는 분석 도구'},
+  {id:'grant-evidence', category:'document', difficulty:'입문', connection:'단일 HTML', title:'정부과제 예산·증빙 관리', target:'제품개발·연구개발', problem:'예산 사용 내역과 증빙 자료의 누락 여부를 반복 확인하는 업무', input:'과제명, 집행일, 예산 항목, 금액, 거래처, 증빙 유형·문서번호', output:'항목별 집행액, 잔여예산, 집행률, 증빙 누락 목록', mvp:'내역 등록 → 합계 계산 → 누락 강조 → CSV 내보내기', prompt:'정부과제 집행 내역을 정리하고 증빙 누락과 잔여예산을 확인하는 관리 도구'},
+  {id:'meeting-pack', category:'document', difficulty:'입문', connection:'AI 활용', title:'회의자료·보고서 구성 도우미', target:'여신심사·ESG·전 부서', problem:'매월 비슷한 형식의 회의자료와 정성·정량 보고서를 작성하는 업무', input:'보고 목적, 핵심 수치, 전월 변화, 이슈, 다음 조치', output:'회의자료 목차, 핵심 요약, 보고 문장, 확인 필요 항목', mvp:'입력폼 → 보고서 형식 조립 → 복사 → 검토 체크', prompt:'핵심 수치와 이슈를 입력하면 회의자료 구조와 보고서 초안을 만드는 도구'},
+  {id:'spec-checklist', category:'document', difficulty:'보통', connection:'AI 활용', title:'시방서 작성 체크리스트', target:'스마트기술·설비보전', problem:'시방서에 필요한 조건과 누락 항목을 반복적으로 확인하는 업무', input:'공사·설비명, 목적, 범위, 요구 성능, 안전 조건, 검수 기준', output:'시방서 목차, 누락 항목, 확인 질문, 초안 복사용 텍스트', mvp:'항목 입력 → 누락 검사 → 목차·초안 생성 → 복사', prompt:'설비·공사 조건을 입력하면 시방서 목차와 누락 확인 질문을 만드는 체크리스트 도구'},
+  {id:'competitor-brief', category:'research', difficulty:'보통', connection:'AI 활용', title:'경쟁사 동향 브리핑 도우미', target:'솔루션마케팅·신사업', problem:'기사와 자료를 모아 경쟁사 동향 보고서를 반복 작성하는 업무', input:'경쟁사, 자료 제목, 날짜, 출처 URL, 본문, 관심 분야', output:'자료 목록, 비교표, 출처 포함 분석 프롬프트, 브리핑 초안', mvp:'자료 등록 → 필터 → 분석 프롬프트 생성 → 복사', prompt:'경쟁사 자료를 정리하고 출처가 포함된 분석 프롬프트를 만드는 브리핑 도구'},
+  {id:'safety-learning', category:'research', difficulty:'보통', connection:'AI 활용', title:'안전교육·법령 정리 도우미', target:'안전환경', problem:'안전교육 자료와 안전보건 법령 내용을 대상별로 정리하는 업무', input:'교육 대상, 작업 유형, 사고 사례, 법령·사내기준 출처, 강조 사항', output:'교육 목차, 핵심 메시지, 퀴즈, 출처·확인 필요 표시', mvp:'자료 입력 → 교육안 조립 → 퀴즈 생성 → 출처 점검', prompt:'안전 자료와 출처를 입력하면 교육안과 확인 퀴즈를 구성하는 도구'}
+];
+const TOPIC_CAT = {all:'전체', data:'데이터·대시보드', document:'문서·행정', research:'조사·AI'};
+const topic6 = () => TOPICS.find(x => x.id === ANS['m6.topic']) || TOPICS[0];
+const SAFE6 = "\n\n[공통 제작 조건]\n- 화면과 버튼은 한국어로 만들어줘.\n- 실제 사내정보 대신 가상의 샘플 데이터를 넣어줘.\n- 처음 실행했을 때 확인할 수 있도록 '샘플 데이터 채우기' 버튼을 넣어줘.\n- 빈 값, 0, 잘못된 형식에서 앱이 멈추지 않고 안내를 보여줘.\n- 확인하지 않은 사실과 회사 기준은 임의로 만들지 말고 '확인 필요'로 표시해줘.\n- API 키나 민감정보를 브라우저 코드에 넣지 마.";
+/* 모듈 ⑥–⑧ 요청문: 슬라이드 문구 + 선택한 주제 + 적은 답변 */
+function P6(type){
+  const t = topic6();
+  if (type === 'idea') return `나는 세아제강의 ${a('m6.department', '[부서 또는 직무]')} 실무자야.\n\n반복 업무는 다음과 같아.\n${a('m6.pain', t.problem)}\n\n오늘 실습 시간 안에 완성할 수 있는 작은 바이브코딩 프로젝트로 범위를 좁혀줘.\n현재 생각한 주제는 '${t.title}'이고, 방향은 ${t.prompt}야.\n\n다음을 표로 정리해줘.\n1. 해결할 문제 한 문장\n2. 사용할 샘플 입력 데이터\n3. 앱이 자동 처리할 일\n4. 사용자가 확인할 결과\n5. 첫 버전 필수 기능 3개\n6. 오늘 만들지 않을 기능\n7. 테스트 완료 조건 3개\n\n아직 코드는 만들지 마.` + SAFE6;
+  if (type === 'prd') return `다음 프로젝트의 한 페이지 미니 PRD를 Markdown으로 작성해줘.\n\n- 프로젝트: ${t.title}\n- 해결 문제: ${a('m6.pain', t.problem)}\n- 입력 데이터: ${t.input}\n- 원하는 결과: ${t.output}\n- 첫 버전 필수 기능: ${a('m6.mustHave', t.mvp)}\n- 오늘 제외할 기능: ${a('m6.exclude', '로그인, 서버, 사내 시스템 연동, 자동 발송')}\n- 완료 테스트: ${a('m6.finishTest', '샘플 데이터에서 핵심 결과가 맞고 빈 값에서 안내가 표시된다.')}\n\nPRD에는 사용자, 입력, 처리 흐름, 출력, 사람이 확인할 항목, 제외 기능, 테스트 완료 조건을 포함해줘. 기준이 부족한 부분은 '확인 필요 사항'으로 분리하고 파일명은 '미니_PRD.md'로 제안해줘. 아직 앱은 만들지 마.` + SAFE6;
+  if (type === 'build') return `첨부한 미니_PRD.md를 기준으로 '${t.title}'의 첫 작동 버전을 만들어줘.\n\n먼저 다음 MVP만 구현해줘.\n${t.mvp}\n\n입력 항목은 ${t.input}이고, 결과는 ${t.output} 형태로 보여줘.\n첫 버전에서는 핵심 흐름이 작동하는지 확인하는 데 집중하고, PRD의 추가 기능은 아직 만들지 마.\nGemini Canvas에서 실행할 수 있는 앱으로 만들어줘.` + SAFE6;
+  if (type === 'customize') return `현재 '${t.title}' 앱은 핵심 기능이 정상 작동하고 있어.\n\n중요한 규칙:\n1. 요청하지 않은 기능은 삭제하거나 변경하지 마.\n2. 현재 정상 작동하는 기능은 그대로 유지해줘.\n3. 이번 요청 부분만 최소한으로 수정해줘.\n\n사용할 데이터 열 또는 입력 항목: ${a('m6.columns', t.input)}\n원하는 결과 형식: ${a('m6.outputForm', t.output)}\n\n샘플 데이터도 이 구조에 맞게 바꾸고, 열이나 값이 누락되었을 때 어떤 항목이 필요한지 알려줘.` + SAFE6;
+  if (type === 'fix') return `나는 코딩 초보자야. '${t.title}' 앱을 테스트하면서 다음 문제를 발견했어.\n\n발견한 문제: ${a('m6.bug', '[입력 · 예상 결과 · 실제 결과]')}\n\n다음 순서로 처리해줘.\n1. 원인을 비개발자도 이해하도록 3줄 이내로 설명해줘.\n2. 이 문제를 재현할 입력값을 알려줘.\n3. 요청한 문제만 최소한으로 수정해줘.\n4. 기존에 정상 작동한 기능은 변경하지 마.\n5. 수정 후 정상·빈 값·경계값 테스트 결과를 알려줘.\n6. Canvas에서 수정된 앱 전체를 다시 실행할 수 있게 해줘.` + SAFE6;
+  if (type === 'demo') return `내가 만든 '${t.title}' 프로젝트의 시연 대본을 작성해줘.\n\n업무 문제:\n${a('m6.demoProblem', t.problem)}\n\n보여줄 핵심 결과:\n${a('m6.demoResult', t.output)}\n\n다음 순서로 구성해줘.\n- 기존 업무의 불편\n- 샘플 입력부터 결과까지 시연\n- 합계·계산·출처를 검증한 방법\n- 현재 한계와 다음 개선\n\n기술 용어와 과장된 효과 표현은 줄이고, 실제 데이터 대신 샘플을 사용한다는 점을 포함해줘.`;
+  return `'${t.title}' 프로토타입의 현업 적용 체크리스트를 작성해줘.\n\n- 검토 담당자 또는 부서: ${a('m6.owner', '[입력]')}\n- 실제 적용 전에 필요한 것: ${a('m6.operationNeed', '[입력]')}\n- 일주일 안에 할 다음 행동: ${a('m6.nextAction', '[입력]')}\n\n체크리스트를 다음 다섯 영역으로 정리해줘.\n1. 데이터 보안과 접근 권한\n2. 계산식·판단 기준의 공식 확인\n3. 결과 검토와 최종 책임자\n4. 시스템 연결과 저장 위치\n5. 샘플 검증 후 운영 테스트\n\n확정되지 않은 사항은 '담당자 확인 필요'로 표시하고, 오늘 만든 결과물을 운영 시스템이라고 표현하지 마.`;
+}
+
 /* ── 교안 내용. 단계 제목(title)은 교안 슬라이드 제목과 같다. {{이름}} = 수강생이 채우는 빈칸 ── */
 const MODS = [
-{id:'m1', eb:'모듈 ①', nav:'업무 비서 활용', title:'제미나이를 나의 자비스처럼', lead:'일정·메일·문서 업무자동화',
+{id:'m1', eb:'모듈 ①', nav:'제미나이를 나의 자비스처럼', outShort:'상황별 업무 비서 프롬프트', title:'제미나이를 나의 자비스처럼', lead:'일정·메일·문서 업무자동화',
  out:'상황별 업무 비서 프롬프트', outNote:'Google 일정·메일·문서를 연계하여 업무를 처리하는 요청문 모음', tools:['gemini'],
  steps:[
   {id:'m1-apps', eb:'연결', title:'Gemini와 연결되는 Google 앱', tools:['gemini'], blocks:[
@@ -477,7 +562,7 @@ const MODS = [
   ]}
  ]},
 
-{id:'m2', eb:'모듈 ②', nav:'웹앱 제작', title:'매출 집계·분석 대시보드 만들기', lead:'Google AI Studio 기반 조회·시각화 웹앱 제작',
+{id:'m2', eb:'모듈 ②', nav:'매출 집계·분석 대시보드', outShort:'매출 분석 대시보드', title:'매출 집계·분석 대시보드 만들기', lead:'Google AI Studio 기반 조회·시각화 웹앱 제작',
  out:'매출 분석 대시보드', outNote:'기간·제품군·거래처별 매출과 추이를 조회하는 웹앱', tools:['studio'],
  steps:[
   {id:'m2-build', eb:'도구', title:'Google AI Studio Build 작업 방식', tools:['studio'], blocks:[
@@ -542,100 +627,162 @@ const MODS = [
     {t:'cards', items:[
       {h:'주석 모드', x:'화면에서 수정할 부분을 직접 지정하고 변경할 내용을 설명합니다. 위치를 문장으로 설명하기 어려운 경우에 사용합니다.'}]}
   ]},
-  {id:'m2-llm', eb:'기능 개선', title:'다른 LLM을 활용한 기능 개선', tools:['chatgpt','claude'], blocks:[
-    {t:'p', x:'동일한 질문을 Gemini 외의 LLM(ChatGPT, Claude 등)에도 입력하여 답변을 비교합니다.'},
-    {t:'prompt', label:'요청문 예시', toText:'다른 LLM에 입력 · 아래에 내 요청문을 붙여 넣기', x:R`아래는 매출 대시보드를 만들 때 쓴 요청문이야. 빠진 조건이나 모호한 표현을 찾고, 고친 요청문을 다시 써줘.`},
+  {id:'m2-llm', eb:'기능 개선', title:'Gemini를 활용한 기능 개선', tools:['gemini'], blocks:[
+    {t:'p', x:'AI Studio에서 쓴 요청문과 결과를 Gemini 앱의 새 대화에서 다시 검토하여 개선점을 찾습니다.'},
+    {t:'prompt', label:'요청문 예시', to:'gemini', toText:'Gemini에 입력 · 아래에 내 요청문을 붙여 넣기', x:R`아래는 매출 대시보드를 만들 때 쓴 요청문이야. 빠진 조건이나 모호한 표현을 찾고, 고친 요청문을 다시 써줘.`},
     {t:'cards', items:[
       {h:'개선 아이디어 도출', x:'대시보드 화면을 제시하고, 실무자에게 추가로 필요한 지표를 질의합니다.'},
       {h:'요청문 보완', x:'작성한 요청문에서 누락된 조건과 모호한 표현을 찾도록 요청합니다.'},
       {h:'계산 방식 확인', x:'Code 탭의 계산 부분을 붙여 넣고, 계산 방식에 대한 설명을 요청합니다.'}]}
   ]},
-  {id:'m2-verify', eb:'검증', title:'계산 결과 검증', tools:['sheets'], blocks:[
+  {id:'m2-verify', eb:'검증', title:'계산 결과 검증', tools:['sheets','gemini'], blocks:[
     {t:'p', x:'대시보드의 수치는 원본 데이터로 재계산하여 대조합니다.'},
     {t:'checktable', id:'m2-verify', head:['확인 항목','대조 방법'], rows:[
       ['총매출','스프레드시트에서 매출액 열의 합계를 산출하여 비교'],
       ['기간 필터','특정 월만 선택한 값과 해당 월의 합계를 비교'],
       ['제품군·거래처별 합계','피벗 테이블 결과와 비교하고, 부분 합의 총합이 총매출과 일치하는지 확인'],
       ['전월 대비 증감률','두 달의 값을 직접 계산하여 비교']]},
-    {t:'note', k:'tip', x:'<b>다른 LLM을 통한 교차 검증</b> · 동일한 파일을 제공하여 총매출과 월별 합계를 계산하도록 한 뒤 대시보드 값과 비교합니다. 값이 다를 경우 원본 데이터로 오류가 있는 쪽을 확인합니다.'}
+    {t:'note', k:'tip', x:'<b>Gemini를 통한 교차 검증</b> · 동일한 파일을 Gemini에 제공하여 총매출과 월별 합계를 계산하도록 한 뒤 대시보드 값과 비교합니다. 값이 다를 경우 원본 데이터로 오류가 있는 쪽을 확인합니다.'}
   ]}
  ]},
 
-{id:'m3', eb:'모듈 ③', nav:'AI 에이전트 구현', title:'고객 문의 분류·응답 에이전트 만들기', lead:'문의 분류, 응대 기준 참조, 답변 초안 생성',
- out:'VOC 분석·응답 에이전트', outNote:'고객 문의를 분류하고 응대 기준에 맞는 답변 초안을 생성하는 도구', tools:['studio'],
+{id:'m3', eb:'모듈 ③', nav:'고객 문의 분류·응답 에이전트', title:'고객 문의 분류·응답 에이전트 만들기', lead:'과거 문의에서 처리 기준을 찾고, 그 기준을 적용하는 앱 제작',
+ out:'VOC 분류·응답 앱', outShort:'VOC 분류·응답 앱', outNote:'처리기준표와 미니 PRD를 바탕으로 문의를 분류하고 답변 초안을 제시하는 Gemini Canvas 앱', tools:['gemini'],
+ stages:{
+  s1:{eb:'1단계', name:'만들 앱 설명과 기준 확인', sub:'Gemini 대화', tool:'gemini'},
+  s2:{eb:'2단계', name:'처리기준표 v1 작성', sub:'Gemini 대화', tool:'gemini'},
+  s3:{eb:'3단계', name:'미니 PRD 작성', sub:'Gemini 대화', tool:'gemini'},
+  s4:{eb:'4단계', name:'앱 제작과 검증', sub:'Gemini Canvas', tool:'gemini'},
+  s5:{name:'정리'}
+ },
  steps:[
-  {id:'m3-flow', eb:'제작 대상', title:'에이전트 처리 흐름', blocks:[
+  {id:'m3-flow', eb:'흐름', title:'실습 흐름', blocks:[
     {t:'flow', items:[
-      {h:'문의 입력', x:'고객 문의 1건'},
-      {h:'요약', x:'두 문장으로 요약'},
-      {h:'유형 분류', x:'유형과 분류 근거'},
-      {h:'기준 참조', x:'해당 응대 기준'},
-      {h:'답변 초안', x:'기준에 따라 작성', end:1}]},
-    {t:'p', x:'마지막 단계에서 담당자 확인 필요 여부를 판단합니다.'},
+      {tag:'1 · Gemini 대화', h:'만들 앱 설명과 기준 확인', x:'AI의 질문에 답하며 앱보다 먼저 정해야 할 업무 기준을 찾습니다.', r:'먼저 확인할 업무 기준 목록'},
+      {tag:'2 · Gemini 대화', h:'처리기준표 v1 작성', x:'AI가 과거 사례를 분석하고, 사람의 판단을 더해 기준표를 만듭니다.', r:'VOC_처리기준_v1.md'},
+      {tag:'3 · Gemini 대화', h:'미니 PRD 작성', x:'기준표를 앱의 입력, 처리, 출력, 제외 기능, 테스트 조건으로 옮깁니다.', r:'미니_PRD.md'},
+      {tag:'4 · Gemini Canvas', h:'앱 제작과 검증', x:'문의 한 건 입력형을 검증한 후 Excel 업로드로 확장합니다.', r:'입력형·Excel 업로드형 앱', end:1}]},
+    {t:'note', k:'tip', tag:'원칙', x:'규칙은 사람이 정하고, AI는 자연어를 해석하여 규칙을 적용하며, 최종 판단은 사람이 내립니다.'}
+  ]},
+  {id:'m3-data', eb:'준비', title:'실습 데이터와 준비물', blocks:[
+    {t:'table', cap:'VOC_교육용_데이터_참가자용.xlsx', head:['시트','내용','사용 단계'], rows:[
+      ['과거처리사례','과거 고객 문의와 당시 처리 기록 18건 (H-001~H-018)','처리기준표 v1 작성'],
+      ['신규문의테스트','처음 접하는 신규 문의 12건 (T-001~T-012)','앱 테스트, Excel 업로드'],
+      ['안내','데이터 구조와 사용 방법','전체']]},
+    {t:'cols', items:[
+      {t:'ul', h:'준비물', items:['Gemini 계정과 일반 대화창','Gemini Canvas','처리기준표와 PRD를 저장할 폴더']},
+      {t:'ul', h:'유의 사항', items:['과거 기록은 정답이 아니라 검토 대상입니다.','실제 고객 정보는 사용하지 않습니다.']}]}
+  ]},
+  {id:'m3-need', stage:'s1', eb:'1단계', title:'만들 앱을 설명하고 부족한 기준 찾기', tools:['gemini'], blocks:[
+    {t:'dl', items:[['사용할 곳','Gemini 일반 대화창'],['입력할 내용','기존 공식 기준, 사용자, 입력, 원하는 결과, AI가 결정하면 안 되는 내용']]},
+    {t:'ask', h:'입력할 내용', note:'자신의 업무 판단만 적으세요. 적은 내용은 아래 요청문의 [입력] 자리에 바로 들어갑니다.', fields:[
+      {key:'m3.existingStandard', label:'기존 공식 기준 또는 매뉴얼', help:'있다면 실제 업무에서는 그 문서가 최우선입니다. 이번 실습은 없다고 가정해도 됩니다.', type:'select', options:['있음 — 기존 문서를 우선 사용','없음 — 과거 사례에서 기준 후보 발견','잘 모름 — 담당자 확인 필요']},
+      {key:'m3.appUser', label:'사용자', help:'실제 업무에서 문의를 처음 확인하는 사람을 떠올려보세요.', placeholder:'예: 고객 문의를 접수하고 담당 부서에 전달하는 직원'},
+      {key:'m3.appInput', label:'입력', help:'처음에는 가장 단순한 입력 방식만 적어도 됩니다.', placeholder:'예: 고객 문의 내용 한 건'},
+      {key:'m3.appOutput', label:'원하는 결과', help:'지금 떠오르는 결과만 적으세요. 빠진 항목은 AI가 질문하게 됩니다.', type:'textarea', placeholder:'예: 문의 요약, 분류, 담당 부서, 답변 초안'},
+      {key:'m3.appGuardrail', label:'AI가 결정하면 안 되는 내용', help:'모르겠으면 ‘아직 잘 모르겠음’이라고 적어도 됩니다.', type:'textarea', placeholder:'예: 확인되지 않은 납기일이나 보상 금액을 확정하면 안 됨'}]},
+    {t:'prompt', to:'gemini', fn:L3(R`고객 문의를 분류하고 답변 초안을 만드는 앱을 만들고 싶어.
+현재 내가 생각한 내용은 다음과 같아.`, [['기존 공식 기준 또는 매뉴얼','m3.existingStandard'],['사용자','m3.appUser'],['입력','m3.appInput'],['원하는 결과','m3.appOutput'],['AI가 결정하면 안 되는 내용','m3.appGuardrail']],
+      R`아직 앱이나 PRD를 만들지 말고, 앱을 제대로 정의하기 위해 필요한 질문을 한 번에 하나씩 최대 5개만 해줘. 내가 모르는 회사 업무 기준이 나오면 임의로 정하지 말고 '먼저 확인할 기준'으로 따로 정리해줘.`)},
+    {t:'cards', items:[{h:'기대하는 발견', x:'분류, 우선순위, 담당 부서, 전문가 검토, 확정 금지 내용 중 세 가지 이상이 먼저 정해져야 함을 확인합니다.'}]}
+  ]},
+  {id:'m3-routes', stage:'s2', eb:'2단계', title:'처리기준표를 만드는 세 가지 출발점', blocks:[
     {t:'cards', items:[
-      {h:'초안 전달', x:'응대 기준으로 답변할 수 있는 문의는 답변 초안을 제시합니다.'},
-      {h:'담당자 확인', x:'기준에 없거나 별도 판단이 필요한 문의는 사유와 함께 표시합니다.'}]}
+      {h:'① 전문가 선검토형', x:'담당자가 사례를 먼저 검토하고 판단을 기록한 후, AI가 기준표로 구조화합니다. 업무 경험이 많은 현업 전문가에게 적합합니다.'},
+      {tag:'이번 실습', hi:1, h:'② AI 분석 후 사람 보완형', x:'AI가 과거 사례의 패턴과 위험 사례를 먼저 찾고, 사람이 동의·수정·보류한 후 기준표를 작성합니다.'},
+      {h:'③ 기존 기준문서 우선형', x:'회사 규정과 매뉴얼을 기준으로 삼고, 과거 사례와 현업 의견으로 부족한 부분을 보완합니다. 실제 업무 적용 시 가장 안전한 방식입니다.'}]},
+    {t:'flow', h:'판단 근거의 우선순위', items:[{h:'회사 공식 기준'},{h:'현업 전문가 판단'},{h:'승인된 과거 사례'},{h:'AI의 패턴 제안', end:1}]},
+    {t:'p', x:'AI 분석과 과거 사례는 기준 후보이며, 그 자체가 회사의 공식 기준은 아닙니다.'}
   ]},
-  {id:'m3-data', eb:'데이터', title:'실습 데이터: 문의 목록과 응대 기준', blocks:[
-    {t:'cards', items:[
-      {h:'고객 문의 목록', x:'구성 열: 접수일, 고객사, 채널, 문의 내용, 처리 상태. 문의 1건이 1개 행으로 구성됩니다.'},
-      {h:'응대 기준 문서', x:'유형별 답변 원칙, 안내 가능 범위, 담당 부서. 답변 초안은 본 문서의 내용만을 근거로 작성합니다.'}]},
-    {t:'chips', h:'문의 유형 예시', items:['납기·출하','품질·클레임','견적·가격','서류 요청','기타']},
-    {t:'note', k:'warn', x:'실제 고객 정보가 포함된 문의는 사용하지 않습니다.'}
-  ]},
-  {id:'m3-classify', eb:'제작 1', title:'유형 분류와 처리 현황 시각화', tools:['studio'], blocks:[
-    {t:'note', k:'check', x:'고객 문의 목록 파일을 먼저 첨부한 뒤 요청문을 붙여 넣습니다.'},
-    {t:'prompt', to:'studio', x:R`첨부한 고객 문의 목록으로 'VOC 분석 도구' 웹앱을 만들어줘.
+  {id:'m3-analyze', stage:'s2', eb:'2단계', title:'과거 사례 패턴 분석', tools:['gemini'], blocks:[
+    {t:'prompt', gate:'과거처리사례 Excel을 첨부한 후 실행합니다.', to:'gemini', x:R`이 자료를 보고 우리 회사의 고객 문의 처리 기준을 만들려고 해.
 
-[분류]
-- 문의마다 유형을 하나 붙인다: 납기·출하, 품질·클레임, 견적·가격, 서류 요청, 기타
-- 분류한 이유를 한 줄로 함께 적는다.
-- 판단하기 어려우면 '기타'로 두고 이유를 적는다.
-
-[화면]
-- 유형별 건수 차트와 처리 상태별 건수
-- 문의 목록 표: 접수일, 고객사, 유형, 처리 상태
-- 유형과 처리 상태로 걸러 보는 필터
-- 첨부 파일의 문의만 사용하고 예시 문의를 만들지 않는다.`},
-    {t:'note', k:'tip', x:'분류는 앱 내부에서 Gemini가 수행합니다. AI Studio가 Gemini API 키를 서버 측에 자동으로 설정하므로 키를 별도로 입력할 필요가 없습니다.'}
+먼저 과거 처리의 공통점과 이상하거나 위험한 사례를 찾아줘. 과거 기록을 모두 정답으로 보지는 말고, 내가 확인하고 결정해야 할 것도 알려줘. 아직 기준표는 만들지 마.`},
+    {t:'table', head:['먼저 볼 것','찾아야 할 신호'], rows:[
+      ['위험한 확답','조회 전 납기 확약, 원인 단정, 보상·취소 승인'],
+      ['중대한 사건','상해·안전·법적 요구를 일반 문의처럼 처리'],
+      ['분류 불일치','비슷한 문의가 서로 다른 부서·우선순위로 처리됨'],
+      ['정보 부족','주문번호·LOT·사진 없이 결론을 내림']]},
+    {t:'note', k:'check', x:'H-009(원인 확인 전 보상 약속)와 H-018(인명 피해 사고)의 처리를 반드시 확인합니다.'}
   ]},
-  {id:'m3-draft', eb:'제작 2', title:'요약, 응대 기준 참조, 답변 초안', tools:['studio'], blocks:[
-    {t:'note', k:'check', x:'응대 기준 문서를 함께 첨부합니다.'},
-    {t:'prompt', to:'studio', x:R`문의를 선택하면 아래 순서로 처리하는 기능을 추가해줘.
-1. 문의 내용을 두 문장으로 요약한다.
-2. 첨부한 응대 기준 문서에서 이 문의에 해당하는 항목을 찾아, 그 문장을 그대로 보여준다.
-3. 찾은 기준에 맞춰 답변 초안을 쓴다.
-
-- 응대 기준에 없는 내용은 답변에 넣지 않는다.
-- 초안 아래에 참조한 기준 항목의 제목을 표시한다.
-- 초안은 고쳐 쓸 수 있는 입력창에 넣는다.`},
-    {t:'cards', h:'화면 표시 항목', items:[
-      {h:'요약', x:'문의의 핵심을 두 문장으로 요약'},
-      {h:'참조한 기준', x:'응대 기준 문서의 해당 문장'},
-      {h:'답변 초안', x:'담당자가 수정하여 사용하는 초안'}]}
+  {id:'m3-standard', stage:'s2', eb:'2단계', title:'사람의 판단을 반영한 처리기준표 v1', tools:['gemini'], blocks:[
+    {t:'note', k:'wait', x:'AI의 분석보고서가 완성된 후에 아래 판단을 적습니다.'},
+    {t:'ask', h:'분석보고서를 검토한 내 판단', note:'적은 내용은 아래 요청문의 [입력] 자리에 바로 들어갑니다.', fields:[
+      {key:'m3.agreement', label:'동의하는 내용', help:'분석보고서에서 타당하다고 본 분류나 위험 판단을 적으세요.', type:'textarea', placeholder:'예: H-009는 원인 확인 전 보상 약속이라 위험하다는 분석에 동의'},
+      {key:'m3.correction', label:'수정하거나 반대할 내용', help:'AI가 잘못 이해했거나 우선순위를 다르게 본 부분을 적으세요.', type:'textarea', placeholder:'예: H-018은 단순 품질 문의가 아니라 인명 피해가 있어 긴급으로 상향'},
+      {key:'m3.hold', label:'회사 확인 필요', help:'가격·보상·계약·담당 권한처럼 공식 확인이 필요한 내용을 적으세요.', type:'textarea', placeholder:'예: 보상 승인 금액과 최종 결재자는 회사 정책 확인 필요'},
+      {key:'m3.reviewer', label:'최종 검토 담당자', help:'필요한 담당 부서나 책임자를 적으세요.', placeholder:'예: 품질관리팀, 안전 담당자, 법무 담당자'},
+      {key:'m3.futureRule', label:'임시 처리 방향', help:'완벽한 정책보다 이번 앱 테스트에 사용할 안전한 방향을 적으세요.', type:'textarea', placeholder:'예: 원인 조사와 담당 부서 검토 전에는 책임과 보상을 확정하지 않는다.'},
+      {key:'m3.decision2', label:'추가 의견', help:'선택 사항입니다.', type:'textarea', placeholder:'예: H-003과 H-004의 분류 차이는 운송 중 손상과 제품 자체 결함을 구분해 다시 검토한다.'}]},
+    {t:'prompt', gate:'분석보고서를 검토한 후, 같은 대화에서 실행합니다.', to:'gemini', fn:L3(R`앞의 분석보고서를 검토한 내 판단은 다음과 같아.`, [['동의하는 내용','m3.agreement'],['수정하거나 반대할 내용','m3.correction'],['회사 확인 필요','m3.hold'],['최종 검토 담당자','m3.reviewer'],['임시 처리 방향','m3.futureRule'],['추가 의견','m3.decision2']],
+      R`앞의 분석보고서와 내 판단을 반영해 새 문의에도 사용할 'VOC 처리기준표 v1'을 Markdown으로 만들어줘. 분류, 우선순위, 담당 부서, 답변 전 확인사항, 전문가 검토, AI가 확정하면 안 되는 내용과 안전한 답변 방향을 포함해줘. 각 기준에는 근거와 상태를 표시해줘. 상태는 '공식 기준', '교육용 임시 기준', '회사 확인 필요' 중 하나로 쓰고, 최종 검토가 필요한 담당자도 적어줘. 이번 실습에서는 회사 공식 문서를 제공하지 않았으므로 과거 사례와 AI 제안을 공식 기준으로 표시하지 마. 아직 PRD나 앱은 만들지 마.`)},
+    {t:'chips', h:'기준 상태', items:['공식 기준','교육용 임시 기준','회사 확인 필요']},
+    {t:'artifact', x:'VOC_처리기준_v1.md'}
   ]},
-  {id:'m3-escalate', eb:'제작 3', title:'담당자 확인이 필요한 문의 구분', tools:['studio'], blocks:[
-    {t:'p', x:'AI가 답변할 수 있는 문의와 담당자의 판단이 필요한 문의를 구분합니다. 구분 기준은 실제 응대 기준과 업무 규정에 맞게 조정합니다.'},
-    {t:'prompt', to:'studio', x:R`아래에 해당하는 문의는 답변 초안을 쓰지 말고 '담당자 확인 필요'로 표시한 뒤 사유를 적어줘.
-- 응대 기준에 해당 항목이 없는 문의
-- 금액, 보상, 계약 조건을 약속해야 하는 문의
-- 품질 문제나 안전과 관련된 문의
-- 내용이 불명확해 추가 확인이 필요한 문의
+  {id:'m3-prd', stage:'s3', eb:'3단계', title:'처리기준표로 미니 PRD 만들기', tools:['gemini'], blocks:[
+    {t:'p', x:'처리기준표는 문의를 판단하는 방법을, 미니 PRD는 그 기준을 사용하는 앱의 작동 방식을 설명합니다.'},
+    {t:'dl', h:'PRD 작성 전 선택 사항', items:[['문의 판단 방식','처리기준표 + AI 자연어 분석 + 사람 최종 검토'],['AI 실행 위치','Gemini Canvas 내장 AI'],['첨부 파일','VOC_처리기준_v1.md']]},
+    {t:'prompt', gate:'VOC_처리기준_v1.md를 첨부한 후 실행합니다.', to:'gemini', x:R`첨부한 VOC 처리기준표를 사용하는 고객 문의 분류·응답 앱의 미니 PRD를 만들려고 해.
 
-문의 목록에서 '담당자 확인 필요'만 모아 보는 필터도 추가해줘.`}
+- 문의 판단 방식: 처리기준표 + AI 자연어 분석 + 사람 최종 검토
+- AI 실행 위치: Gemini Canvas 내장 AI
+
+선택한 방식의 역할과 제약을 PRD에 명시해줘. PRD를 만들기 위해 꼭 필요한 질문을 한 번에 하나씩, 최대 3개만 해줘. 내 답변이 끝나면 Markdown 문서로 정리하고 파일명은 '미니_PRD.md'로 해줘. 아직 앱은 만들지 마.`},
+    {t:'artifact', x:'미니_PRD.md'}
   ]},
-  {id:'m3-improve', eb:'개선', title:'응답 개선', tools:['studio'], blocks:[
-    {t:'p', x:'테스트 문의를 입력해 본 뒤, 잘못 처리된 사례를 그대로 제시하여 수정을 요청합니다.'},
-    {t:'table', head:['증상','수정 요청 예시'], copyCol:1, rows:[
-      ['유형 분류 오류가 잦음',{x:'잘못 분류된 문의를 예로 들어 "이런 문의는 \'납기·출하\'로 분류해줘"라고 요청', c:"이런 문의는 '납기·출하'로 분류해줘"}],
-      ['답변이 응대 기준과 다름',{x:'"답변 초안의 각 문장이 어느 기준 항목에서 나왔는지 표시해줘"', c:'답변 초안의 각 문장이 어느 기준 항목에서 나왔는지 표시해줘'}],
-      ['문체가 적절하지 않음',{x:'"답변은 정중한 말투로 쓰고, 사과 표현은 한 번만 써줘"', c:'답변은 정중한 말투로 쓰고, 사과 표현은 한 번만 써줘'}],
-      ['확인이 필요한 문의에 초안이 생성됨',{x:'"보상이나 금액이 언급되면 반드시 \'담당자 확인 필요\'로 표시해줘"', c:"보상이나 금액이 언급되면 반드시 '담당자 확인 필요'로 표시해줘"}]]},
-    {t:'note', k:'tip', x:'본 분류·응답 기능은 이후 MCP 연동 실습에서 계속 사용합니다.'}
+  {id:'m3-prd-check', stage:'s3', eb:'3단계', title:'미니 PRD 확인 항목', tools:['gemini'], blocks:[
+    {t:'checks', id:'m3-prdcheck', note:'문장을 다시 작성하지 않고, 만들어진 문서에 다음 항목이 포함되었는지만 확인합니다.', items:[
+      {h:'판단 방식이 ‘처리기준표 + AI 분석 + 사람 최종 검토’로 명시됨'},
+      {h:'AI 실행 위치가 Gemini Canvas 내장 AI로 명시됨'},
+      {h:'앱 사용자가 명확함'},
+      {h:'문의 한 건 입력형부터 시작하고, 성공 후 Excel로 확장'},
+      {h:'AI 결과와 답변 초안을 사람이 수정 가능'},
+      {h:'답변 자동 발송 없음'},
+      {h:'판단 근거와 기준 상태 표시'},
+      {h:'외부 API·ERP·Google Sheets 연동은 제외'},
+      {h:'구체적인 테스트 완료 조건 포함'}]},
+    {t:'prompt', label:'필요할 때', h:'PRD가 어렵게 느껴질 때', to:'gemini', x:R`방금 만든 미니 PRD를 비개발자도 이해할 수 있도록 설명해줘. '사용자가 하는 일 → AI가 하는 일 → 사람이 확인하는 일 → 이번에 만들지 않는 일' 순서로 짧고 쉽게 설명하고, 내가 앱 제작 전에 확인해야 할 항목을 다섯 개 이내로 알려줘.`}
+  ]},
+  {id:'m3-build', stage:'s4', eb:'4단계', title:'문의 한 건 입력형 앱 제작', tools:['gemini'], blocks:[
+    {t:'ol', items:['새 Gemini Canvas에 두 문서 첨부','아래 요청문 실행','서로 다른 문의 두 건으로 실제 분석 여부 확인']},
+    {t:'prompt', to:'gemini', toText:'새 Gemini Canvas에 입력', x:R`첨부한 VOC 처리기준표와 미니_PRD.md를 기준으로 고객 문의 분류·응답 앱을 만들어줘.
+
+- PRD에서 선택한 문의 판단 방식: 처리기준표 + AI 자연어 분석 + 사람 최종 검토
+- PRD에서 선택한 AI 실행 위치: Gemini Canvas 내장 AI
+
+이번 실습에서는 Gemini Canvas 내장 AI를 반드시 사용해 입력한 문의의 자연어를 실제로 분석하고 처리기준표를 적용해줘. 고정 예시 답변이나 자바스크립트 규칙 시뮬레이션으로 대신하지 마. 외부 AI API나 API 키는 사용하지 마. PRD에서 외부 AI API를 선택했다면 먼저 모듈 5의 범위라고 알려줘. 고객 문의 한 건을 입력해 처리하는 기능부터 만들어줘. 문서에 없는 내용은 임의로 결정하지 말고 '회사 확인 필요'로 표시해줘.`}
+  ]},
+  {id:'m3-test', stage:'s4', eb:'4단계', title:'입력형 테스트와 통과 기준', blocks:[
+    {t:'examples', h:'테스트 문의 예시', items:[
+      {h:'일반 문의 예시', x:'주문 제품의 출고 여부와 예상 도착일을 알려주세요.'},
+      {h:'위험 문의 예시', x:'제품 파손 과정에서 작업자가 다쳤습니다. 보상 계획을 알려주세요.'}]},
+    {t:'checktable', id:'m3-test', head:['테스트','통과 기준'], rows:[
+      ['Canvas 내장 AI','서로 다른 문의 두 건의 분석 결과가 다르며, 예시 결과만 반복하지 않음'],
+      ['일반 납기 문의','조회하지 않은 도착일을 확정하지 않음'],
+      ['작업자 상해 문의','긴급 처리와 안전·품질·법무 검토를 요청'],
+      ['기준 근거와 상태','적용 기준을 표시하고, 임시·확인 필요 항목을 공식 결정처럼 표현하지 않음'],
+      ['Excel 업로드','헤더를 문의로 처리하지 않고 문의내용 열을 정확히 읽음'],
+      ['여러 건 처리','순차 처리하며 실패한 행만 다시 실행 가능']]}
+  ]},
+  {id:'m3-excel', stage:'s4', eb:'4단계', title:'수정 요청과 Excel 업로드 확장', tools:['gemini'], blocks:[
+    {t:'ask', h:'테스트에서 발견한 문제', note:'테스트를 통과했다면 비워 두고 Excel 확장으로 넘어갑니다.', fields:[
+      {key:'m3.fixNote', label:'발견한 문제', type:'textarea', placeholder:'예: 문의를 바꿔도 고정 답변만 나와.'}]},
+    {t:'prompt', gate:'테스트에 실패했을 때만 사용합니다.', to:'gemini', fn:L3(R`입력형 앱을 테스트하면서 다음 문제를 발견했어.`, [['발견한 문제','m3.fixNote']],
+      R`첨부한 VOC 처리기준표와 미니_PRD.md를 다시 확인하고 이 문제만 수정해줘. 기존에 정상 작동한 기능은 유지해줘.`, '[예: 문의를 바꿔도 고정 답변만 나와.]')},
+    {t:'prompt', gate:'입력형 테스트를 통과한 후, VOC_교육용_데이터_참가자용.xlsx를 첨부하여 실행합니다.', to:'gemini', x:R`입력형 테스트를 통과했어. 지금 첨부한 VOC_교육용_데이터_참가자용.xlsx의 '신규문의테스트' 시트를 예시로 보고 미니_PRD.md에 따라 Excel 업로드 기능을 추가해줘.
+
+이 예시 시트는 4행에 헤더가 있고 5행부터 T-001~T-012 문의가 있어. 열 순서를 가정하지 말고 헤더 이름으로 문의번호와 문의내용을 찾아줘. 제목·안내·헤더 행과 다른 시트의 과거 사례는 신규 문의로 분석하지 마. 업로드 후 분석 전 미리보기를 보여주고, 여러 건은 순차 처리하며 실패한 행만 다시 실행할 수 있게 해줘. 각 행의 분석에는 입력형과 같은 Gemini Canvas 내장 AI 기능을 사용해줘.`},
+    {t:'note', k:'tip', x:'Excel 결과가 이상하면 요청문보다 헤더 매핑을 먼저 확인합니다.'}
+  ]},
+  {id:'m3-boundary', stage:'s5', eb:'정리', title:'사람과 AI의 역할, 운영 전 절차', blocks:[
+    {t:'p', x:'AI는 기준을 적용하여 제안하고, 확정과 발송은 사람이 결정합니다.'},
+    {t:'cols', items:[
+      {t:'ul', h:'AI가 결정하면 안 되는 사항', items:['확인되지 않은 사실, 책임, 보상의 확정','사람의 확인 없는 답변 자동 발송','입력형 검증 전 기능의 일괄 확장']},
+      {t:'ol', h:'실제 업무 적용 전 절차', items:['현업 책임자가 교육용 임시 기준과 회사 확인 필요 항목 검토','공식 기준 문서와 승인 권한 반영','보안·개인정보·사용 권한 점검','외부 API와 실제 데이터 연동 및 운영 테스트']}]}
   ]}
  ]},
 
-{id:'m4', eb:'모듈 ④', nav:'외부 정보 활용', title:'산업 뉴스 수집과 시장 동향 보고서 작성 자동화하기', lead:'뉴스 대시보드, 이슈·출처 정리, 보고서 초안과 근거 확인',
+{id:'m4', eb:'모듈 ④', nav:'산업 뉴스 수집과 시장 동향 보고서', outShort:'뉴스 수집·추천 대시보드, 시장 동향 보고서', title:'산업 뉴스 수집과 시장 동향 보고서 작성 자동화하기', lead:'뉴스 대시보드, 이슈·출처 정리, 보고서 초안과 근거 확인',
  out:'관심 분야별 뉴스 수집·추천 대시보드, 시장 동향 보고서', tools:['studio','notebook','gemini'],
  stages:{
   s1:{eb:'1단계', name:'수집 연결 확인', sub:'구글 뉴스 RSS'},
@@ -800,7 +947,237 @@ const MODS = [
       ['사용량 한도 안내가 표시됨','무료 사용량 소진','강사 공유 노트북(보기 권한)으로 계속 진행'],
       ['선정한 기사가 부족함','대시보드 단계 지연','강사 공유 노트북에서 질문 실습만 진행']]}
   ]}
+ ]},
+{id:'m5', eb:'모듈 ⑤', nav:'협업형 VOC 처리 시스템', title:'협업형 VOC 처리 시스템 만들기', lead:'공용 Google Sheet, AI 분석, 담당자 처리를 하나의 흐름으로 연결',
+ out:'고객 문의 처리 자동화 도구', outShort:'고객 문의 처리 자동화 도구', outNote:'공용 시트의 신규 문의를 조회하고, AI 분석 결과와 담당자 처리 기록을 남기는 직원용 앱', tools:['gemini','studio','sheets'],
+ stages:{
+  s1:{eb:'1단계', name:'협업 문제 발견', sub:'Gemini 대화', tool:'gemini'},
+  s2:{eb:'2단계', name:'협업 PRD 작성', sub:'Gemini 대화 (1단계와 동일)', tool:'gemini'},
+  s3:{eb:'3단계', name:'직원용 앱과 AI 분석', sub:'Google AI Studio Build', tool:'studio'},
+  s4:{eb:'4단계', name:'담당자 지정과 공동 처리', sub:'Google AI Studio Build', tool:'studio'}
+ },
+ steps:[
+  {id:'m5-flow', eb:'흐름', title:'실습 흐름', blocks:[
+    {t:'flow', items:[
+      {tag:'1 · Gemini 대화', h:'협업 문제 발견', x:'여러 직원이 함께 처리할 때 발생하는 문제와 필요한 기능을 찾습니다.', r:'공동 처리에 필요한 기능'},
+      {tag:'2 · Gemini 대화 (1단계와 동일)', h:'협업 PRD 작성', x:'접근 권한, AI 실행 시점, 담당자 선택, 완료 조건을 정합니다.', r:'VOC_협업처리_PRD_v1.md'},
+      {tag:'3 · Google AI Studio Build', h:'직원용 앱과 AI 분석', x:'공용 시트의 신규 문의를 조회하고 AI 제안을 같은 행에 저장합니다.', r:'신규 문의를 조회·분석·저장하는 앱'},
+      {tag:'4 · Google AI Studio Build', h:'담당자 지정과 공동 처리', x:'담당자가 문의를 맡아 검토·수정하고, 동료가 같은 상태를 확인합니다.', r:'담당자와 처리 상태가 공유되는 앱', end:1}]},
+    {t:'note', k:'tip', tag:'원칙', x:'기준은 사람이 정하고, AI는 제안하며, 팀이 처리 상태를 함께 관리합니다.'}
+  ]},
+  {id:'m5-why', stage:'s1', eb:'1단계', title:'개인용 앱에서 공동 처리로', tools:['sheets'], blocks:[
+    {t:'p', x:'아침에 공용 Google Sheet에 신규 VOC가 쌓여 있습니다. 직원이 앱을 열어 AI 분석을 요청하고, 동료가 그 결과를 이어서 처리합니다.'},
+    {t:'table', head:['모듈 ③의 질문','모듈 ⑤에서 추가할 질문'], rows:[
+      ['이 문의를 어떻게 처리할 것인가?','누가 이 문의를 맡을 것인가?'],
+      ['어떤 답변을 제안할 것인가?','누가 검토하고 답변할 것인가?'],
+      ['AI 분석 결과는 무엇인가?','현재 상태와 다음 할 일은 무엇인가?']]},
+    {t:'ask', h:'생각할 질문', note:'한두 줄씩 메모하세요. 메모는 다음 단계의 요청문에 바로 들어갑니다.', fields:[
+      {key:'m5.q1', label:'생각할 질문 1 · 다섯 명이 각자 처리하면 어떤 문제가 발생합니까?', type:'textarea', placeholder:'예: 같은 문의를 두 명이 답변한다.'},
+      {key:'m5.q2', label:'생각할 질문 2 · AI 분석이 끝난 후 다른 직원이 알아야 할 정보는 무엇입니까?', type:'textarea', placeholder:'예: AI 제안, 누가 맡았는지, 현재 처리 상태'}]}
+  ]},
+  {id:'m5-p1', stage:'s1', eb:'1단계', title:'협업에 필요한 기능 찾기', tools:['gemini'], blocks:[
+    {t:'dl', items:[['사용할 곳','Gemini 일반 대화의 새 채팅'],['첨부','없음 (질문에 대한 메모만 함께 전송)'],['결과','AI가 제안한 기능 중 실제로 필요한 것만 선택합니다. 이 대화는 2단계에서 계속 사용합니다.']]},
+    {t:'prompt', gate:'앞 단계에서 적은 메모가 아래 [메모] 자리에 들어갑니다.', to:'gemini', fn:() => R`모듈 3에서는 개인이 고객 문의 한 건을 입력하면 AI가 기준표에 따라 요약·분류·답변 초안을 제안하는 앱을 만들었어. 이제 공용 Google Sheet의 신규 문의를 여러 직원이 함께 처리하려고 해. 직원이 앱에서 새 문의를 보고 AI 분석을 요청한 뒤, 다른 직원이 결과를 검토하고 맡아 처리하는 흐름에 꼭 필요한 기능만 3가지 제안해줘. 내 메모를 반영하고 아직 앱이나 PRD는 만들지 마.` + '\n\n내 메모:\n' +
+      `- 다섯 명이 각자 처리하면 어떤 문제가 생길까요? ${a('m5.q1','[메모]')}\n- 누군가 AI 분석을 끝낸 뒤 다른 직원이 알아야 할 것은 무엇인가요? ${a('m5.q2','[메모]')}`}
+  ]},
+  {id:'m5-p2', stage:'s2', eb:'2단계', title:'AI와 대화하며 협업 PRD 작성', tools:['gemini'], blocks:[
+    {t:'dl', items:[['사용할 곳','1단계와 같은 Gemini 대화 (새 채팅을 만들지 않음)'],['첨부','VOC_처리기준_v1.md, 미니_PRD.md'],['결과','AI의 질문에 답한 후 VOC_협업처리_PRD_v1.md로 저장합니다. 이 문서는 3단계에서 사용합니다.']]},
+    {t:'prompt', to:'gemini', x:R`첨부한 모듈 3 기준표·미니 PRD를 바탕으로 직원용 VOC 협업 앱의 한 페이지 PRD를 만들자. 공용 Google Sheet의 신규 문의를 구글 로그인한 직원이 앱에서 보고, 버튼을 눌러 Gemini AI 분석을 요청하면 제안 결과를 같은 행에 저장하고, 담당자가 검토·수정해 자신이 맡고 처리 상태를 기록하는 흐름이야.
+접근 권한, AI 실행 시점, 담당자 선택, 완료 조건을 나에게 하나씩 질문해줘. 제작 도구는 Google AI Studio Build로 하고, 회사 규정이나 보안 설정은 임의로 확정하지 마. 내 답을 반영해 'VOC_협업처리_PRD_v1.md'로 정리해줘.`}
+  ]},
+  {id:'m5-prd-plan', stage:'s2', eb:'2단계', title:'협업 PRD의 운영 규칙', blocks:[
+    {t:'p', x:'AI의 질문에 답하기 어려우면 교육용 임시안을 선택하며, 이를 회사 정책으로 확정하지 않습니다.'},
+    {t:'table', head:['AI가 질문할 항목','교육용 임시안'], rows:[
+      ['문의 유입','교육용 신규 문의가 공용 Google Sheet에 이미 입력되어 있음'],
+      ['AI 실행','직원이 앱에서 버튼을 누를 때 미분석 문의를 분석'],
+      ['담당자 선택','직원이 미배정 문의를 가져가고 시트에 담당자를 기록'],
+      ['처리 상태·완료','신규 → 검토중 → 완료, 필수 검토와 최종 답변은 사람이 확인']]},
+    {t:'flow', h:'PRD에서 확인할 흐름', items:[{h:'앱에서 신규 문의 조회'},{h:'직원이 AI 실행, 같은 행에 저장'},{h:'담당자 검토, 상태 기록', end:1}]},
+    {t:'note', k:'warn', x:'Google 로그인만으로 회사 직원만 접근할 수 있다고 가정하지 않습니다. 로그인과 시트 접근 권한은 구분하여 기록합니다.'}
+  ]},
+  {id:'m5-sheet', stage:'s3', eb:'3단계', title:'공용 시트의 기록 구조', tools:['sheets'], blocks:[
+    {t:'table', head:['영역','기록할 내용'], rows:[
+      ['원본','문의번호, 접수일, 채널, 문의내용'],
+      ['AI 제안','요약, 분류, 우선순위, 추천부서, 답변초안, 근거'],
+      ['사람의 결정','담당자, 상태, 검토 결과, 후속 업무, 기한, 최종답변'],
+      ['처리 기록','문의를 맡은 사람, 상태와 메모를 변경한 시각']]},
+    {t:'cards', items:[
+      {h:'AI 제안과 사람의 결정은 구분', x:'AI 제안은 원래 문의와 같은 행에 저장하되, 사람의 최종 결정 열과 섞지 않습니다.'},
+      {h:'AI 분석 완료는 처리 완료가 아님', x:'AI 분석이 끝난 문의도 담당자의 검토와 최종 답변을 거쳐야 완료됩니다.'}]}
+  ]},
+  {id:'m5-build', stage:'s3', eb:'3단계', title:'Google AI Studio Build로 직원용 앱 제작', tools:['studio'], blocks:[
+    {t:'dl', items:[['사용할 곳','Google AI Studio Build의 새 프로젝트'],['제공할 자료','두 문서의 내용과 교육용 시트 링크 (Excel 파일은 첨부하지 않음)'],['확인할 결과','T-001의 AI 제안이 시트의 같은 행에 저장됨']]},
+    {t:'prompt', to:'studio', x:R`제공한 VOC_처리기준_v1.md와 VOC_협업처리_PRD_v1.md를 읽고 직원용 VOC 앱을 만들어줘. Google Sheets 연동으로 내가 제공한 교육용 공용 시트의 미분석 신규 문의를 목록에 보여줘. 직원이 Google 로그인 후 'AI 분석'을 누르면 서버 측 Gemini AI가 선택한 문의를 실제 분석하고, 요약·분류·우선순위·담당 제안·답변 초안을 원래 문의의 같은 행에 'AI 제안'으로 저장해줘.
+헤더 이름으로 문의번호와 문의내용을 찾고, API 키는 브라우저에 노출하지 마. AI가 사람의 최종 결정이나 완료 상태를 바꾸지 않게 해줘. 먼저 T-001 한 건이 동작하는 최소 화면부터 만들어줘.`}
+  ]},
+  {id:'m5-expand', stage:'s3', eb:'3단계', title:'T-001 검증 후 미분석 문의로 확장', tools:['studio','sheets'], blocks:[
+    {t:'ol', h:'한 건 검증 순서', items:['앱 미리보기에서 Google 로그인 후 미분석 신규 문의가 표시되는지 확인','T-001을 선택하여 ‘AI 분석’ 실행','시트의 T-001 행에 AI 제안이 저장되었는지 확인','성공한 경우에만 아래 요청문 실행']},
+    {t:'prompt', gate:'T-001 저장을 확인한 후 실행합니다.', to:'studio', x:R`T-001 분석과 같은 행 저장을 확인했어. 이제 미분석 신규 문의만 직원이 선택해 분석할 수 있게 해줘.
+이미 분석된 행은 덮어쓰지 말고, 일시 오류는 안내와 재시도를 제공해줘. 한꺼번에 무제한 호출하지 않게 해줘.`},
+    {t:'checks', id:'m5-expand', h:'통과 기준', items:[{h:'신규 VOC 조회'},{h:'T-001 같은 행 저장'},{h:'AI 제안과 사람의 결정 구분'},{h:'분석 완료와 처리 완료 구분'}]}
+  ]},
+  {id:'m5-p4', stage:'s4', eb:'4단계', title:'담당자 지정과 공동 처리', tools:['studio'], blocks:[
+    {t:'dl', items:[['사용할 곳','3단계와 같은 Google AI Studio Build 프로젝트'],['첨부','없음 (기준표, 협업 PRD, 시트 연결이 반영되어 있는지 확인)'],['준비','접근 권한을 확인한 두 계정 (A, B)']]},
+    {t:'prompt', to:'studio', x:R`이 앱의 AI 분석 결과를 사람이 이어서 처리하게 해줘. 미배정 문의에서 직원이 '내가 맡기'를 누르면 로그인한 직원이 담당자로 같은 Google Sheet 행에 저장되게 해줘. 이미 다른 사람이 맡았다면 덮어쓰지 말고 알려줘.
+담당자는 AI 제안을 검토·수정하고 처리 상태·다음 할 일·메모를 저장할 수 있어야 해. 다른 직원이 다시 열면 최신 시트 기록이 보이게 하고, AI 분석만으로 완료가 되거나 검토 없이 완료로 바뀌지 않게 해줘. 별도 대시보드나 자동 고객 답변 발송은 만들지 마.`}
+  ]},
+  {id:'m5-test', stage:'s4', eb:'4단계', title:'두 계정으로 공동 처리 확인', tools:['studio','sheets'], blocks:[
+    {t:'ol', h:'확인 순서', marks:['A','A','B','B'], items:['AI 제안이 기록된 미배정 문의를 열어 내용과 위험 표시를 검토','‘내가 맡기’로 담당자를 기록하고, 수정 사항·다음 할 일·처리 메모 저장','같은 앱을 열거나 새로고침하여 담당자와 최신 상태 확인','배정된 문의를 다시 가져갈 수 없는지, 검토 없이 완료할 수 없는지 확인']},
+    {t:'checktable', id:'m5-test', head:['확인 항목','통과 기준'], rows:[
+      ['공동 데이터','A가 저장한 담당자·상태를 B가 다시 열어 확인'],
+      ['중복 배정','이미 맡은 문의를 다른 사람이 덮어쓰지 못함'],
+      ['다음 할 일','처리 메모와 다음 행동이 남음'],
+      ['완료 통제','사람의 필수 검토 없이 완료 불가']]}
+  ]}
+ ]},
+
+{id:'m6', eb:'모듈 ⑥', nav:'나만의 미니 프로젝트 기획', title:'나만의 미니 프로젝트 기획하기', lead:'반복 업무에서 주제를 고르고 첫 버전의 범위를 정의',
+ out:'개인 프로젝트 설계안', outShort:'개인 프로젝트 설계안', outNote:'해결할 문제, 데이터, 핵심 기능, 제외 기능, 완료 조건을 정리한 미니_PRD.md', tools:['gemini'],
+ stages:{
+  s1:{eb:'1단계', name:'주제 선택', sub:'Gemini 대화', tool:'gemini'},
+  sc:{name:'공통 제작 조건'},
+  s2:{eb:'2단계', name:'범위 정의', sub:'Gemini 대화', tool:'gemini'}
+ },
+ steps:[
+  {id:'m6-survey', eb:'출발점', title:'사전 설문에서 확인한 출발점', blocks:[
+    {t:'stats', items:[['17 / 20','생성형 AI를 거의 매일 활용'],['14 / 20','정확도·신뢰성을 주요 장애 요인으로 선택'],['5 / 20','웹앱·프로그램 제작 경험 보유']]},
+    {t:'p', x:'참가자 대부분이 AI를 자주 사용하지만, 앱 제작 경험과 결과 검증 방식에는 차이가 있습니다. 따라서 데이터 취합과 보고서 작성처럼 실제로 반복되는 업무에서 출발합니다.'},
+    {t:'note', k:'tip', tag:'원칙', x:'작게 정의하고, 먼저 작동하게 만들고, 실제 데이터보다 검증 가능한 샘플로 확인합니다.'}
+  ]},
+  {id:'m6-flow', eb:'흐름', title:'미니 프로젝트 진행 흐름', blocks:[
+    {t:'table', head:['모듈','단계','결과물'], rows:[
+      ['⑥ 기획','1 · 주제 선택','선택한 주제와 해결할 문제 한 문장'],
+      ['⑥ 기획','2 · 범위 정의','미니_PRD.md'],
+      ['⑦ 제작','3 · 첫 버전','샘플 데이터로 작동하는 앱'],
+      ['⑦ 제작','4 · 업무 맞춤','내 업무 데이터 구조를 반영한 앱'],
+      ['⑦ 제작','5 · 검증·수정','테스트를 통과한 미니 프로젝트'],
+      ['⑧ 시연과 적용','6 · 시연 준비','시연 대본'],
+      ['⑧ 시연과 적용','7 · 적용 계획','현업 적용 체크리스트와 다음 행동']]}
+  ]},
+  {id:'m6-topics', stage:'s1', eb:'1단계 주제 선택', title:'프로젝트 주제 예시', blocks:[
+    {t:'p', x:'업무 전체가 아니라 입력과 결과를 설명할 수 있는 작은 문제 한 가지를 선택합니다.'},
+    {t:'topics'}
+  ]},
+  {id:'m6-topic-detail', stage:'s1', eb:'1단계 주제 선택', title:'주제 카드 구성 예시', blocks:[
+    {t:'topicSel'},
+    {t:'cols', items:[
+      {t:'ul', h:'주제 선정 기준', items:['입력 데이터가 구체적인가','핵심 결과물이 한 화면 또는 한 문서인가','실제 사내 정보 대신 샘플로 테스트할 수 있는가']},
+      {t:'text', h:'범위가 큰 주제', x:'ERP 대체, 사내 통합 시스템, 도면 자동 판독 등은 첫 버전으로 축소합니다.'}]}
+  ]},
+  {id:'m6-p1', stage:'s1', eb:'1단계 주제 선택', title:'주제 범위를 좁히는 요청문', tools:['gemini'], blocks:[
+    {t:'ask', h:'내 업무를 적습니다', note:'적은 내용과 선택한 주제가 아래 요청문에 바로 들어갑니다.', fields:[
+      {key:'m6.department', label:'부서 또는 직무', help:'부서명보다 실제 수행 업무를 함께 적으면 좋습니다.', placeholder:'예: 생산계획, 품질관리, 영업'},
+      {key:'m6.pain', label:'가장 반복적이고 번거로운 업무 한 문장', help:'여러 업무를 동시에 선택하지 않습니다.', type:'textarea', placeholder:'예: 매주 여러 엑셀의 실적을 모아 같은 형식의 보고자료를 만든다.'}]},
+    {t:'prompt', gate:'요청문 끝에 공통 제작 조건이 이미 붙어 있습니다.', to:'gemini', fn:() => P6('idea')}
+  ]},
+  {id:'m6-common', stage:'sc', eb:'공통', title:'모든 요청문에 붙이는 공통 제작 조건', blocks:[
+    {t:'prompt', label:'[공통 제작 조건]', toText:'요청문 끝에 붙여 넣기', x:SAFE6.trim()},
+    {t:'cards', items:[
+      {h:'샘플 데이터', x:'사내 정보를 입력하지 않고도 바로 결과를 확인할 수 있습니다.'},
+      {h:'예외 입력 처리', x:'빈 값, 0, 형식 오류에서 앱이 멈추지 않도록 합니다.'},
+      {h:'확인 필요 표시', x:'AI가 회사 기준이나 사실을 임의로 만드는 것을 막습니다.'}]},
+    {t:'note', k:'tip', x:'이 도우미의 모듈 ⑥~⑦ 요청문에는 공통 제작 조건이 이미 붙어 있습니다. 시연 대본과 적용 계획 요청문에는 붙이지 않습니다.'}
+  ]},
+  {id:'m6-scope', stage:'s2', eb:'2단계 범위 정의', title:'필수 기능, 제외 기능, 완료 테스트', blocks:[
+    {t:'p', x:'만들 기능보다 만들지 않을 기능을 먼저 정합니다. 좋은 제작 요청문은 기능 목록이 아니라 범위에 대한 합의입니다.'},
+    {t:'ask', h:'범위를 적습니다', note:'적은 내용은 다음 단계의 미니 PRD 요청문에 바로 들어갑니다.', fields:[
+      {key:'m6.mustHave', label:'첫 버전 필수 기능', help:'최대 세 개', type:'textarea', placeholder:'예: CSV 불러오기, 달성률 계산, 부서별 필터'},
+      {key:'m6.exclude', label:'오늘 만들지 않을 기능', help:'한 개 이상 명시', type:'textarea', placeholder:'예: 로그인, 사내 시스템 연동, 자동 메일 발송'},
+      {key:'m6.finishTest', label:'완료 테스트', help:'화면에서 확인 가능한 문장', type:'textarea', placeholder:'예: 샘플 10건의 합계가 원본과 같고, 빈 값에서 오류 대신 안내가 표시됨'}]},
+    {t:'pairs', head:['검증할 수 없는 표현','확인 가능한 표현'], nocopy:1, items:[["‘깔끔하게’, ‘스마트하게’, ‘보기 좋게’","‘계산’, ‘필터’, ‘복사’, ‘합계가 원본과 일치’"]]}
+  ]},
+  {id:'m6-prd', stage:'s2', eb:'2단계 범위 정의', title:'미니 PRD 요청문', tools:['gemini'], blocks:[
+    {t:'prompt', gate:'1단계와 같은 Gemini 대화에서 실행합니다.', to:'gemini', fn:() => P6('prd')},
+    {t:'checks', id:'m6-prd', h:'확인', items:[{h:'사용자·입력·결과 구분'},{h:'필수 기능 세 개 이내'},{h:'제외 기능과 완료 조건 포함'}]},
+    {t:'artifact', x:'한 페이지 미니_PRD.md · 다음 모듈의 첫 제작 요청문에 첨부합니다.'}
+  ]}
+ ]},
+
+{id:'m7', eb:'모듈 ⑦', nav:'업무 도구·AI 에이전트 제작', title:'나만의 업무 도구·AI 에이전트 제작하기', lead:'첫 버전 제작, 업무 맞춤 수정, 테스트와 수정',
+ out:'나만의 미니 프로젝트', outShort:'나만의 미니 프로젝트', outNote:'개인의 업무를 반영하여 샘플 데이터로 검증한 웹앱 또는 AI 도구', tools:['gemini'],
+ stages:{
+  s3:{eb:'3단계', name:'첫 버전', sub:'Gemini Canvas', tool:'gemini'},
+  s4:{eb:'4단계', name:'업무 맞춤', sub:'같은 Canvas', tool:'gemini'},
+  s5:{eb:'5단계', name:'검증·수정', sub:'같은 Canvas', tool:'gemini'},
+  sx:{name:'정리'}
+ },
+ steps:[
+  {id:'m7-build', stage:'s3', eb:'3단계 첫 버전', title:'첫 화면과 핵심 기능 만들기', tools:['gemini'], blocks:[
+    {t:'topicSel'},
+    {t:'ol', h:'진행 순서', items:['새 Gemini Canvas에 미니_PRD.md 첨부','아래 요청문 실행','버튼을 직접 눌러 입력부터 결과까지 확인']},
+    {t:'note', k:'warn', tag:'첫 요청에서 제외', x:'Excel 업로드, AI 분석, 내보내기, 디자인을 한꺼번에 요구하지 않습니다.'},
+    {t:'prompt', to:'gemini', toText:'새 Gemini Canvas에 입력', fn:() => P6('build')}
+  ]},
+  {id:'m7-custom', stage:'s4', eb:'4단계 업무 맞춤', title:'내 데이터와 출력 형식에 맞추기', tools:['gemini'], blocks:[
+    {t:'ask', h:'바꿀 내용을 적습니다', note:'적은 내용은 아래 요청문에 바로 들어갑니다.', fields:[
+      {key:'m6.columns', label:'사용할 데이터 열', help:'민감정보를 제외한 열 이름만 입력', type:'textarea', placeholder:'예: 기준월, 공장, 계획량, 실적량, 비고'},
+      {key:'m6.outputForm', label:'원하는 결과 형식', help:'결과를 사용할 상황까지 함께 기술', type:'textarea', placeholder:'예: 부서별 표, 달성률 막대, 인쇄용 한 페이지 요약'}]},
+    {t:'note', k:'warn', tag:'민감정보 제외', x:'실제 고객명, 거래처명, 설비번호는 붙여 넣지 않습니다. 구조가 복잡하면 열 이름 다섯 개와 가상 데이터 다섯 행만 사용합니다.'},
+    {t:'prompt', gate:'첫 버전을 만든 같은 Canvas에 보냅니다.', to:'gemini', fn:() => P6('customize')}
+  ]},
+  {id:'m7-test', stage:'s5', eb:'5단계 검증·수정', title:'테스트와 수정 요청 방법', blocks:[
+    {t:'checks', id:'m7-test', items:[
+      {h:'정상 데이터', x:'원본 계산 또는 수기 계산과 결과를 비교합니다.'},
+      {h:'빈 값', x:'빈 값과 0을 구분하고, 오류 대신 안내가 표시되는지 확인합니다.'},
+      {h:'경계값', x:'0으로 나누기처럼 계산이 성립하지 않는 경우를 확인합니다.'}]},
+    {t:'pairs', head:['피해야 할 요청','권장 요청'], nocopy:1, items:[["‘안 돼요’, ‘이상해요’<br>AI가 정상 기능까지 변경할 수 있습니다.","입력, 예상 결과, 실제 결과를 함께 기술<br>예: ‘생산량이 0일 때 원단위가 무한대로 표시된다. 안내 문구가 나와야 한다.’"]]},
+    {t:'note', k:'tip', x:'오류가 보이면 전체 코드를 다시 만들지 않고, 문제 한 가지만 설명하여 수정합니다.'}
+  ]},
+  {id:'m7-fix', stage:'s5', eb:'5단계 검증·수정', title:'수정 요청문', tools:['gemini'], blocks:[
+    {t:'ask', h:'발견한 문제를 적습니다', note:'입력·예상 결과·실제 결과가 드러나게 적으세요.', fields:[
+      {key:'m6.bug', label:'발견한 문제', type:'textarea', placeholder:'예: 생산량이 0일 때 원단위가 무한대로 표시된다. 안내 문구가 나와야 한다.'}]},
+    {t:'prompt', gate:'테스트를 모두 통과했다면 이 요청문은 사용하지 않습니다.', to:'gemini', fn:() => P6('fix')}
+  ]},
+  {id:'m7-checks', stage:'sx', eb:'정리', title:'단계별 확인 항목', blocks:[
+    {t:'table', head:['단계','결과에서 확인할 것','AI가 하면 안 되는 것'], rows:[
+      ['첫 버전','첫 화면에서 입력할 내용이 명확함<br>샘플 데이터로 결과가 바로 표시됨<br>핵심 계산이나 문서 조립이 실제로 작동함','가짜 결과 고정 표시<br>실제처럼 보이는 임의 수치 생성<br>API 키 노출'],
+      ['업무 맞춤','입력·결과 열이 업무 용어와 일치함<br>수정 전 정상 기능이 유지됨<br>민감정보 없이 샘플로 검증함','요청하지 않은 화면·기능 변경<br>실제 사내 데이터를 코드에 포함<br>누락 데이터를 0이나 정상으로 처리'],
+      ['검증·수정','합계와 비율이 원본 또는 수기 계산과 일치함<br>빈 값과 0을 구분함<br>출처 없는 사실이나 확정 표현이 없음','오류를 숨기려고 0이나 빈칸으로 변경<br>확인하지 않은 사실 추가<br>정상 기능 삭제']]}
+  ]}
+ ]},
+
+{id:'m8', eb:'모듈 ⑧', nav:'프로젝트 시연과 현업 적용 계획', title:'프로젝트 시연과 현업 적용 계획 수립하기', lead:'문제 해결 흐름 시연, 운영 전 확인 사항과 다음 행동 정리',
+ out:'나만의 미니 프로젝트 최종본', outShort:'미니 프로젝트 최종본', outNote:'시연과 피드백을 반영하여 현업 활용 방향을 정리한 결과물', tools:['gemini'],
+ stages:{
+  s6:{eb:'6단계', name:'시연 준비', sub:'Gemini 대화', tool:'gemini'},
+  s7:{eb:'7단계', name:'적용 계획', sub:'Gemini 대화', tool:'gemini'}
+ },
+ steps:[
+  {id:'m8-demo', stage:'s6', eb:'6단계 시연 준비', title:'시연 구성', blocks:[
+    {t:'flow', items:[
+      {tag:'1', h:'업무 문제', x:'기존 업무의 불편'},
+      {tag:'2', h:'샘플 시연', x:'샘플 입력부터 결과까지'},
+      {tag:'3', h:'검증 방법', x:'합계·계산·출처를 확인한 방법'},
+      {tag:'4', h:'한계와 다음 개선', x:'미해결 사항과 다음 단계', end:1}]},
+    {t:'cards', items:[
+      {h:'피할 것', x:'코드 설명, 모든 기능을 차례로 누르기. 근거 없는 절감 효과 수치, 프로토타입을 운영 시스템처럼 표현'},
+      {h:'앱이 미완성인 경우', x:'작동한 화면, 미해결 문제, 다음 수정 요청문을 시연합니다.'}]}
+  ]},
+  {id:'m8-demo-prompt', stage:'s6', eb:'6단계 시연 준비', title:'시연 대본 요청문', tools:['gemini'], blocks:[
+    {t:'ask', h:'시연할 내용을 적습니다', note:'적은 내용은 아래 요청문에 바로 들어갑니다.', fields:[
+      {key:'m6.demoProblem', label:'시연에서 말할 업무 문제', type:'textarea', placeholder:'예: 매월 다섯 개 파일을 합쳐 실적표를 만드는 데 반복 작업이 많았습니다.'},
+      {key:'m6.demoResult', label:'시연에서 보여줄 핵심 결과', type:'textarea', placeholder:'예: 샘플 CSV를 불러오면 부서별 달성률과 미달 항목이 바로 표시됩니다.'}]},
+    {t:'prompt', to:'gemini', fn:() => P6('demo')}
+  ]},
+  {id:'m8-apply', stage:'s7', eb:'7단계 적용 계획', title:'현업 적용 전 확인 사항', blocks:[
+    {t:'p', x:'오늘 만든 결과물은 가능성을 확인한 프로토타입입니다. 실제 적용은 데이터 승인, 계산 기준, 보안, 운영 책임자를 확인한 후 진행합니다.'},
+    {t:'ol', items:[
+      '<b>데이터 보안과 접근 권한</b> · 실제 데이터 사용 승인 여부 확인',
+      '<b>계산식·판단 기준 확인</b> · 공식 계산식과 기준의 책임자 확인',
+      '<b>결과 검토와 최종 책임자</b> · 결과를 검토할 담당자 지정',
+      '<b>시스템 연결과 저장 위치</b> · 승인 없이 사내 시스템과 연결하지 않음',
+      '<b>샘플 검증 후 운영 테스트</b> · 실제 연동 전 샘플 검증 계획 수립']},
+    {t:'note', k:'check', tag:'다음 행동', x:'큰 도입 계획 대신 일주일 안에 할 수 있는 작은 행동 한 가지를 정합니다.'}
+  ]},
+  {id:'m8-apply-prompt', stage:'s7', eb:'7단계 적용 계획', title:'적용 계획 요청문', tools:['gemini'], blocks:[
+    {t:'ask', h:'적용 계획을 적습니다', note:'적은 내용은 아래 요청문의 [입력] 자리에 바로 들어갑니다.', fields:[
+      {key:'m6.owner', label:'검토 담당자 또는 부서', placeholder:'예: 팀장, 정보보안, 업무 기준 담당자'},
+      {key:'m6.operationNeed', label:'실제 적용 전에 필요한 것', type:'textarea', placeholder:'예: 데이터 접근 승인, 공식 계산식 확인, 저장 위치 결정'},
+      {key:'m6.nextAction', label:'일주일 안에 할 다음 행동', type:'textarea', placeholder:'예: 익명화한 샘플 20건으로 결과를 다시 확인하고 팀 동료에게 시연'}]},
+    {t:'prompt', to:'gemini', fn:() => P6('apply')}
+  ]}
  ]}
+
 ];
 
 /* ── 상태: 진행 표시는 이 브라우저에만 저장(막혀 있으면 메모리로만 동작) ── */
@@ -815,9 +1192,9 @@ const SLOTS = {};            // 빈칸에 적은 값. 저장하지 않는다.
 const COPY = [];             // 복사 버튼이 가리키는 문장
 const PROMPTS = [];          // 요청문 원문
 const STEP_VIEW = {};        // 단계 id → 모듈 id
-const VIEWS = ['start','m1','m2','m3','m4','wrap'];
+const VIEWS = ['start','m1','m2','m3','m4','m5','m6','m7','m8','wrap'];
 const VIEW_NAME = {start:'시작하기', wrap:'정리'};
-MODS.forEach(m => { VIEW_NAME[m.id] = m.eb + ' · ' + m.nav; m.steps.forEach(s => { STEP_VIEW[s.id] = m.id; }); });
+MODS.forEach(m => { VIEW_NAME[m.id] = (m.navEb || m.eb) + ' · ' + m.nav; m.steps.forEach(s => { STEP_VIEW[s.id] = m.id; }); });
 let current = 'start';
 
 const $ = (s, r) => (r || document).querySelector(s);
@@ -837,32 +1214,61 @@ function copyBtn(text, label){
 function promptHTML(b){
   const i = PROMPTS.push(b) - 1;
   let n = 0;
-  const body = esc(b.x).replace(/\{\{(.+?)\}\}/g, (_, k) =>
+  const body = b.fn ? esc(b.fn()) : esc(b.x).replace(/\{\{(.+?)\}\}/g, (_, k) =>
     `<input class="slot" type="text" id="slot-${i}-${n++}" data-slot="${k}" placeholder="[${k}]" aria-label="${k} 직접 입력" autocomplete="off" spellcheck="false">`);
   const to = b.toText || (b.to ? TOOLS[b.to].name + '에 입력' : '');
-  return `<div class="prompt">
+  return `<div class="grp">${b.gate ? `<p class="gate">${b.gate}</p>` : ''}<div class="prompt">
     <div class="p-head"><span class="p-label">${b.label || '요청문'}</span>${b.h ? `<span class="p-title">${b.h}</span>` : ''}<span class="p-to">${to}</span><button class="p-copy" type="button" data-prompt="${i}">복사</button></div>
-    <div class="p-text${b.long ? ' clip' : ''}" id="ptext-${i}"${b.long ? ' tabindex="0"' : ''}>${body}</div>
+    <div class="p-text${b.long ? ' clip' : ''}" id="ptext-${i}"${b.fn ? ` data-dyn="${i}"` : ''}${b.long ? ' tabindex="0"' : ''}>${body}</div>
     ${b.long ? `<div class="p-foot"><button type="button" data-expand="ptext-${i}" aria-expanded="false">전체 펼치기</button></div>` : ''}
-  </div>`;
+  </div></div>`;
 }
-const NOTE_TAG = {check:'확인', warn:'주의', tip:'참고'};
+const NOTE_TAG = {check:'확인', warn:'주의', tip:'참고', wait:'대기', stuck:'막히면'};
+function fieldHTML(f){
+  const id = 'a-' + f.key.replace(/[^A-Za-z0-9_-]/g, '-');
+  const ctl = f.type === 'select'
+    ? `<select class="field" id="${id}" data-ans="${f.key}"><option value="">선택해 주세요</option>${f.options.map(o => `<option>${esc(o)}</option>`).join('')}</select>`
+    : f.type === 'textarea'
+      ? `<textarea class="field" id="${id}" data-ans="${f.key}" rows="3" placeholder="${esc(f.placeholder || '')}"></textarea>`
+      : `<input class="field" type="text" id="${id}" data-ans="${f.key}" placeholder="${esc(f.placeholder || '')}" autocomplete="off">`;
+  return `<div class="ask"><label for="${id}">${f.label}</label>${f.help ? `<small>${f.help}</small>` : ''}${ctl}</div>`;
+}
+const roleHTML = (k, chip, h, items) => `<div class="role ${k}"><span class="chip-l">${chip}</span><strong>${h}</strong><ul class="dots">${items.map(x => `<li>${x}</li>`).join('')}</ul></div>`;
+function topicSelHTML(){
+  const t = topic6();
+  return `<div class="tsel-h"><small>선택한 주제</small><strong>${t.title}</strong><a href="#m6-topics">주제 바꾸기</a></div>
+    <dl class="spec"><dt>추천 대상</dt><dd>${t.target}</dd><dt>해결 문제</dt><dd>${t.problem}</dd><dt>입력</dt><dd>${t.input}</dd><dt>결과</dt><dd>${t.output}</dd><dt>첫 버전 MVP</dt><dd>${t.mvp}</dd><dt>제작 방식</dt><dd>${t.connection} · ${t.difficulty}</dd></dl>`;
+}
 const BLOCK = {
   p: b => `<p>${b.x}</p>`,
-  ol: b => `<div class="grp">${b.h ? `<h3 class="sub">${b.h}</h3>` : ''}<ol class="steps">${b.items.map((x, i) => `<li><b>${i + 1}</b><span>${x}</span></li>`).join('')}</ol></div>`,
+  ol: b => `<div class="grp">${b.h ? `<h3 class="sub">${b.h}</h3>` : ''}<ol class="steps">${b.items.map((x, i) => `<li><b>${(b.marks && b.marks[i]) || i + 1}</b><span>${x}</span></li>`).join('')}</ol></div>`,
+  dl: b => `<div class="grp">${b.h ? `<h3 class="sub">${b.h}</h3>` : ''}<dl class="route-dl">${b.items.map(([k, v]) => `<dt>${k}</dt><dd>${v}</dd>`).join('')}</dl></div>`,
   ul: b => `<div class="grp">${b.h ? `<h3 class="sub">${b.h}</h3>` : ''}<ul class="dots">${b.items.map(x => `<li>${x}</li>`).join('')}</ul></div>`,
   cols: b => `<div class="cols">${b.items.map(block).join('')}</div>`,
-  note: b => `<div class="note ${b.k}"><b class="tag">${NOTE_TAG[b.k]}</b><span>${b.x}</span></div>`,
-  cards: b => `<div class="grp">${b.h ? `<h3 class="sub">${b.h}</h3>` : ''}<div class="cards">${b.items.map(c => `<div class="card">${c.tag ? `<span class="tag">${c.tag}</span>` : ''}<strong>${c.h}</strong>${c.em ? `<em>${c.em}</em>` : ''}<span>${c.x}</span></div>`).join('')}</div></div>`,
-  flow: b => `<div class="flow">${b.items.map((n, i) => `${i ? '<span class="edge" aria-hidden="true"></span>' : ''}<div class="node${n.end ? ' end' : ''}">${n.tag ? `<small>${n.tag}</small>` : ''}<strong>${n.h}</strong><span>${n.x}</span></div>`).join('')}</div>`,
+  text: b => `<div class="grp"><h3 class="sub">${b.h}</h3><p>${b.x}</p></div>`,
+  goal: b => `<p class="goal"><b>목표</b><span>${b.x}</span></p>`,
+  artifact: b => `<div class="out"><span class="out-h">결과물</span><div><strong>${b.x}</strong></div></div>`,
+  roles: b => `<div class="roles">${roleHTML('h', '사람이 결정', '내가 할 일', b.human)}${roleHTML('a', 'AI에게 맡김', 'AI가 할 일', b.ai)}${roleHTML('v', '함께 검증', '결과에서 확인할 일', b.verify)}${b.must ? roleHTML('no', '주의', 'AI가 결정하면 안 되는 것', b.must) : ''}</div>`,
+  route: b => `<div class="grp"><h3 class="sub">지금 어디에서 무엇을 하나요?</h3><dl class="route-dl"><dt>사용할 곳</dt><dd>${b.place}</dd><dt>창·대화</dt><dd>${b.open}</dd><dt>첨부·연결</dt><dd>${b.files}</dd><dt>이 단계의 결과</dt><dd>${b.result}</dd></dl></div>`,
+  ask: b => `<div class="grp"><h3 class="sub">${b.h}</h3>${b.note ? `<p class="muted">${b.note}</p>` : ''}${b.rec ? `<div class="note check"><b class="tag">권장</b><span>${b.rec}</span></div>` : ''}<div class="asks">${b.fields.map(fieldHTML).join('')}</div></div>`,
+  memo: b => `<div class="grp">${fieldHTML({key:b.key, label:b.h, type:'textarea', placeholder:b.placeholder, help:b.note})}</div>`,
+  examples: b => `<div class="grp"><h3 class="sub">${b.h}</h3><div class="pairs">${b.items.map(e => `<div class="good"><span><b>${e.h}</b> · ${e.x}</span>${copyBtn(e.x)}</div>`).join('')}</div></div>`,
+  stats: b => `<div class="grp">${b.h ? `<h3 class="sub">${b.h}</h3>` : ''}${b.note ? `<p class="muted">${b.note}</p>` : ''}<div class="stats">${b.items.map(([n, l]) => `<div class="stat"><strong>${n}</strong><span>${l}</span></div>`).join('')}</div></div>`,
+  topics: () => `<div class="grp"><h3 class="sub">내 업무와 가까운 프로젝트를 선택합니다</h3><p class="muted">완성할 결과물은 작동하는 핵심 기능을 가진 MVP입니다. 카드를 선택하면 이후 단계의 요청문이 자동으로 바뀝니다.</p>
+    <div class="chips" role="group" aria-label="분야">${Object.entries(TOPIC_CAT).map(([k, l]) => `<button class="kw" type="button" data-tfilter="${k}" aria-pressed="false">${l}</button>`).join('')}</div>
+    <div class="topics">${TOPICS.map(t => `<button class="topic" type="button" data-topic="${t.id}" data-cat="${t.category}" aria-pressed="false"><span class="tmeta"><i>${t.difficulty}</i><i>${t.connection}</i><i>${TOPIC_CAT[t.category]}</i></span><strong>${t.title}</strong><span class="pb">${t.problem}</span></button>`).join('')}</div></div>`,
+  topicSel: () => `<div class="tsel" data-tsel></div>`,
+  note: b => `<div class="note ${b.k}"><b class="tag">${b.tag || NOTE_TAG[b.k]}</b><span>${b.x}</span></div>`,
+  cards: b => `<div class="grp">${b.h ? `<h3 class="sub">${b.h}</h3>` : ''}${b.note ? `<p class="muted">${b.note}</p>` : ''}<div class="cards">${b.items.map(c => `<div class="card${c.hi ? ' hi' : ''}">${c.tag ? `<span class="tag">${c.tag}</span>` : ''}<strong>${c.h}</strong>${c.em ? `<em>${c.em}</em>` : ''}<span>${c.x}</span></div>`).join('')}</div></div>`,
+  flow: b => `<div class="grp">${b.h ? `<h3 class="sub">${b.h}</h3>` : ''}<div class="flow">${b.items.map((n, i) => `${i ? '<span class="edge" aria-hidden="true"></span>' : ''}<div class="node${n.end ? ' end' : ''}">${n.tag ? `<small>${n.tag}</small>` : ''}<strong>${n.h}</strong>${n.x ? `<span>${n.x}</span>` : ''}${n.r ? `<em class="nr">결과물 · ${n.r}</em>` : ''}</div>`).join('')}</div></div>`,
   chips: b => `<div class="chips"><span class="chips-h">${b.h}</span>${b.items.map(x => `<span class="chip">${x}</span>`).join('')}</div>`,
   code: b => `<div class="grp"><h3 class="sub">${b.h}</h3><code class="url">${esc(b.x)}</code></div>`,
   prompt: promptHTML,
   table: b => `<div class="grp">${b.cap ? `<h3 class="sub">${b.cap}</h3>` : ''}<div class="tbl"><table><thead><tr>${b.head.map(h => `<th>${h}</th>`).join('')}</tr></thead><tbody>${b.rows.map(r => `<tr>${r.map(c => typeof c === 'string' ? `<td>${c}</td>` : `<td>${copyBtn(c.c)}${c.x}</td>`).join('')}</tr>`).join('')}</tbody></table></div></div>`,
   checktable: b => `<div class="tbl"><table><thead><tr><th class="c">확인</th>${b.head.map(h => `<th>${h}</th>`).join('')}</tr></thead><tbody>${b.rows.map((r, i) => `<tr><td class="c"><input type="checkbox" id="k-${b.id}-${i}" data-keep aria-label="${esc(r[0])} 확인"></td><td><label for="k-${b.id}-${i}"><b>${r[0]}</b></label></td><td>${r[1]}</td></tr>`).join('')}</tbody></table></div>`,
   matrix: b => `<div class="tbl"><table><thead><tr>${b.head.map((h, i) => `<th${i ? ' class="c"' : ''}>${h}</th>`).join('')}</tr></thead><tbody>${b.rows.map((r, i) => `<tr><td>${r}</td>${[1, 2, 3].map(j => `<td class="c"><input type="checkbox" id="k-${b.id}-${i}-${j}" data-keep aria-label="${esc(r)} · 이슈 ${j}"></td>`).join('')}</tr>`).join('')}</tbody></table></div>`,
-  checks: b => `<ul class="checks">${b.items.map((c, i) => `<li><label><input type="checkbox" id="k-${b.id}-${i}" data-keep><span><b>${c.h}</b>${c.x ? `<span>${c.x}</span>` : ''}</span></label></li>`).join('')}</ul>`,
-  pairs: b => `<div class="pairs"><div class="pair pairs-h" aria-hidden="true"><span>${b.head[0]}</span><span></span><span>${b.head[1]}</span></div>${b.items.map(p => `<div class="pair"><div class="bad">${p[0]}</div><div class="arr" aria-hidden="true"></div><div class="good"><span>${p[1]}</span>${copyBtn(p[1])}</div></div>`).join('')}</div>`,
+  checks: b => `<div class="grp">${b.h ? `<h3 class="sub">${b.h}</h3>` : ''}${b.note ? `<p class="muted">${b.note}</p>` : ''}<ul class="checks">${b.items.map((c, i) => `<li><label><input type="checkbox" id="k-${b.id}-${i}" data-keep><span>${c.x ? `<b>${c.h}</b><span>${c.x}</span>` : c.h}</span></label></li>`).join('')}</ul></div>`,
+  pairs: b => `<div class="pairs"><div class="pair pairs-h" aria-hidden="true"><span>${b.head[0]}</span><span></span><span>${b.head[1]}</span></div>${b.items.map(p => `<div class="pair"><div class="bad">${p[0]}</div><div class="arr" aria-hidden="true"></div><div class="good"><span>${p[1]}</span>${b.nocopy ? '' : copyBtn(p[1])}</div></div>`).join('')}</div>`,
   wire: () => `<div class="wire" role="img" aria-label="매출 분석 대시보드 화면 구성. 위에서부터 조회 조건, 핵심 지표, 추이와 구성 순서입니다.">
     <div class="w-row" style="--n:3"><i class="w-n">1</i><span class="w-box">기간</span><span class="w-box">제품군</span><span class="w-box">거래처</span></div>
     <div class="w-row" style="--n:3"><i class="w-n">2</i><span class="w-box kpi">총매출</span><span class="w-box kpi">거래 건수</span><span class="w-box kpi">전월 대비</span></div>
@@ -897,16 +1303,16 @@ function viewModule(m){
   m.steps.forEach((s, i) => {
     if (s.stage && s.stage !== stage){
       const g = m.stages[s.stage];
-      html += `<div class="stage"><div class="stage-t"><small>${g.eb}${g.sub ? ' · ' + g.sub : ''}</small><strong>${g.name}</strong></div>${g.tool ? launch(g.tool) : ''}</div>`;
+      html += `<div class="stage"><div class="stage-t">${g.eb ? `<small>${g.eb}${g.sub ? ' · ' + g.sub : ''}</small>` : ''}<strong>${g.name}</strong></div>${g.tool ? launch(g.tool) : ''}</div>`;
     }
     stage = s.stage || null;
     html += `<section class="step" id="${s.id}" tabindex="-1" aria-labelledby="h-${s.id}">
       <div class="step-head">
-        <span class="num" aria-hidden="true">${i + 1}</span>
+        <span class="num" aria-hidden="true"></span>
         <div class="step-t"><span class="eb">${m.eb} · ${s.eb}</span><h2 id="h-${s.id}">${s.title}</h2></div>
         <label class="done"><input class="sr" type="checkbox" id="done-${s.id}" data-keep data-step="${s.id}"><span>완료</span></label>
       </div>
-      ${s.tools ? `<div class="launch">${s.tools.map(launch).join('')}</div>` : ''}
+      ${s.tools ? `<div class="launch">${s.tools.map(k => launch(k)).join('')}</div>` : ''}
       ${s.blocks.map(block).join('')}
     </section>`;
   });
@@ -915,14 +1321,14 @@ function viewModule(m){
       <h1>${m.title}</h1>
       <p class="lead">${m.lead}</p>
       <div class="out"><span class="out-h">산출물</span><div><strong>${m.out}</strong>${m.outNote ? `<span>${m.outNote}</span>` : ''}</div></div>
-      <div class="launch">${m.tools.map(launch).join('')}</div>
+      <div class="launch">${m.tools.map(k => launch(k)).join('')}</div>
       <div class="prog"><div class="prog-bar"><i data-bar="${m.id}"></i></div><span data-progtext="${m.id}"></span></div>
-      <ol class="toc" aria-label="단계">${m.steps.map((s, i) => `<li><a href="#${s.id}" data-toc="${s.id}">${i + 1}. ${s.title}</a></li>`).join('')}</ol>
+      <ol class="toc" aria-label="단계">${m.steps.map((s, i) => `<li><a href="#${s.id}" data-toc="${s.id}">${s.title}</a></li>`).join('')}</ol>
     </header>${html}${pager(m.id)}`;
 }
 function viewStart(){
   const tool = (key, name, host, use, mods) => `<div class="tool">
-    <div class="tool-h"><i class="mono ${key}" aria-hidden="true">${TOOLS[key].mono}</i><strong>${name}</strong></div>
+    <div class="tool-h"><i class="mono ${key}" aria-hidden="true">${TOOLS[key].mono || TOOLS[key].tile}</i><strong>${name}</strong></div>
     <div class="tool-meta"><code>${host}</code><span>${use}</span><small>사용 모듈 ${mods}</small></div>
     ${launch(key, '바로가기')}
     <label class="tool-ok"><input type="checkbox" id="k-ready-${key}" data-keep>열리는 것을 확인했습니다</label>
@@ -935,9 +1341,10 @@ function viewStart(){
     <section class="block" aria-labelledby="h-prep">
       <h2 id="h-prep">실습 준비</h2>
       <div class="tools">
-        ${tool('gemini','Gemini 앱','gemini.google.com','일정·메일·문서 처리, 보고서 초안 작성','①, ④')}
-        ${tool('studio','Google AI Studio','aistudio.google.com/apps','웹앱과 AI 에이전트 제작','②, ③, ④')}
+        ${tool('gemini','Gemini 앱 (Canvas 포함)','gemini.google.com','업무 처리, 기준표·PRD 작성, 앱 제작','①, ③~⑧')}
+        ${tool('studio','Google AI Studio','aistudio.google.com/apps','웹앱 제작 (Build)','②, ④, ⑤')}
         ${tool('notebook','Gemini Notebook','notebooklm.google.com','자료에 근거한 이슈·출처 정리. 기존 NotebookLM 주소로 접속합니다.','④')}
+        ${tool('sheets','Google Sheets','sheets.google.com','공용 VOC 업무 기록','⑤')}
       </div>
       <div class="cards">
         <div class="card"><strong>샘플 데이터 사용</strong><span>실제 고객 정보와 대외비 자료는 입력하지 않습니다.</span></div>
@@ -951,14 +1358,15 @@ function viewStart(){
       <ol class="steps">
         <li><b>1</b><span>강사 화면의 교안 제목과 같은 단계를 찾습니다. 단계 제목은 교안 슬라이드 제목과 같습니다.</span></li>
         <li><b>2</b><span>바로가기 버튼을 눌러 실습 도구를 새 탭에서 엽니다.</span></li>
-        <li><b>3</b><span>남색 요청문의 복사 버튼을 누르고 도구 입력창에 붙여 넣습니다. 점선 빈칸에 내용을 적으면 복사할 때 함께 들어갑니다.</span></li>
-        <li><b>4</b><span>단계를 마치면 완료를 누릅니다. 진행 표시는 이 브라우저에만 저장됩니다.</span></li>
+        <li><b>3</b><span>질문 칸에 내 업무 판단을 적습니다. 적은 내용은 바로 아래 요청문에 들어갑니다. 요청문 안의 점선 빈칸도 직접 채울 수 있습니다.</span></li>
+        <li><b>4</b><span>남색 요청문의 복사 버튼을 누르고 도구 입력창에 붙여 넣습니다.</span></li>
+        <li><b>5</b><span>단계를 마치면 완료를 누릅니다. 진행 표시와 질문 칸에 적은 내용은 이 브라우저에만 저장됩니다.</span></li>
       </ol>
     </section>
     <section class="block" aria-labelledby="h-course">
       <h2 id="h-course">과정 구성</h2>
-      <div class="cards">${MODS.map(m => `<a class="card" href="#${m.id}"><span class="tag">${m.eb} · ${m.nav}</span><strong>${m.title}</strong><span>산출물 · ${m.out}</span><span class="more" data-progtext="${m.id}"></span></a>`).join('')}</div>
-      <p class="muted">Gemini를 기본 도구로 사용하며, 다양한 LLM과 자동화 도구를 함께 활용합니다.</p>
+      <div class="cards">${MODS.map(m => `<a class="card" href="#${m.id}"><span class="tag">${m.eb}</span><strong>${m.nav}</strong><span>산출물 · ${m.outShort || m.out}</span><span class="more" data-progtext="${m.id}"></span></a>`).join('')}</div>
+      <p class="muted">실습에는 Gemini와 Google AI Studio를 사용합니다.</p>
     </section>
     <section class="block" aria-labelledby="h-vibe">
       <h2 id="h-vibe">바이브코딩 작업 방식</h2>
@@ -971,7 +1379,7 @@ function viewStart(){
       <p>모든 실습은 위 네 단계를 반복하여 진행합니다. 한 번에 완성하기보다 확인과 수정을 거듭하여 완성도를 높입니다.</p>
     </section>
     <section class="block">
-      <div class="act"><button class="btn" type="button" id="reset" data-act="reset">진행 표시 모두 지우기</button><span class="muted">완료 표시와 체크 항목을 처음 상태로 되돌립니다.</span></div>
+      <div class="act"><button class="btn" type="button" id="reset" data-act="reset">진행 표시 모두 지우기</button><span class="muted">완료 표시, 체크 항목, 질문 칸에 적은 내용을 처음 상태로 되돌립니다.</span></div>
     </section>
     ${pager('start')}`;
 }
@@ -982,12 +1390,11 @@ function viewWrap(){
     </header>
     <section class="block" aria-labelledby="h-outs">
       <h2 id="h-outs">실습 산출물</h2>
-      <div class="cards">${MODS.map(m => `<a class="card" href="#${m.id}"><span class="tag">${m.eb}</span><strong>${m.out}</strong><span class="more" data-progtext="${m.id}"></span></a>`).join('')}</div>
+      <div class="cards">${MODS.map(m => `<a class="card" href="#${m.id}"><span class="tag">${m.eb}</span><strong>${m.outShort || m.out}</strong><span class="more" data-progtext="${m.id}"></span></a>`).join('')}</div>
     </section>
     <section class="block" aria-labelledby="h-way">
       <h2 id="h-way">작업 방식</h2>
       <ul class="dots"><li>문장으로 설명하여 제작합니다</li><li>증상을 기술하여 수정합니다</li><li>근거를 확인한 후 사용합니다</li></ul>
-      <div class="note tip"><b class="tag">참고</b><span>이후 실습에서는 MCP 연동을 통한 고객 문의 처리 자동화와 개인별 미니 프로젝트를 진행합니다.</span></div>
     </section>
     ${pager('wrap')}`;
 }
@@ -999,11 +1406,11 @@ function renderNav(){
     <div class="route">${MODS.map(m => {
       let stage = null;
       const links = current !== m.id ? '' : `<div class="sub-nav">${m.steps.map(s => {
-        const g = s.stage && s.stage !== stage ? `<div class="sg">${m.stages[s.stage].eb} · ${m.stages[s.stage].name}</div>` : '';
+        const g = s.stage && s.stage !== stage ? `<div class="sg">${m.stages[s.stage].eb ? m.stages[s.stage].eb + ' · ' : ''}${m.stages[s.stage].name}</div>` : '';
         stage = s.stage || null;
         return `${g}<a class="sl" href="#${s.id}" data-sl="${s.id}"><i class="ck" aria-hidden="true"></i><span>${s.title}</span></a>`;
       }).join('')}</div>`;
-      return `<a class="nav-btn stop" href="#${m.id}"${cur(m.id)}><span class="dot" aria-hidden="true"></span><span class="st"><small>${m.eb}</small>${m.nav}</span><span class="cnt" data-cnt="${m.id}"></span></a>${links}`;
+      return `<a class="nav-btn stop" href="#${m.id}"${cur(m.id)}><span class="dot" aria-hidden="true"></span><span class="st"><small>${m.navEb || m.eb}</small>${m.nav}</span><span class="cnt" data-cnt="${m.id}"></span></a>${links}`;
     }).join('')}</div>
     <a class="nav-btn" href="#wrap"${cur('wrap')}>정리</a>`;
   refresh();
@@ -1024,6 +1431,16 @@ function refresh(){
   });
 }
 function hydrate(){ $$('input[data-keep]').forEach(i => { i.checked = !!store.data[i.id]; }); }
+function hydrateAns(){ $$('[data-ans]').forEach(el => { el.value = ANS[el.dataset.ans] || ''; }); }
+function refreshDyn(){ $$('[data-dyn]').forEach(el => { el.textContent = PROMPTS[+el.dataset.dyn].fn(); }); }
+function applyTopics(){
+  const f = ANS['m6.filter'] || 'all';
+  $$('[data-tfilter]').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.tfilter === f)));
+  $$('[data-topic]').forEach(b => { b.setAttribute('aria-pressed', String(b.dataset.topic === topic6().id)); b.hidden = f !== 'all' && b.dataset.cat !== f; });
+  const html = topicSelHTML();
+  $$('[data-tsel]').forEach(el => { el.innerHTML = html; });
+  refreshDyn();
+}
 
 /* ── 이동 ── */
 function show(view){
@@ -1068,6 +1485,7 @@ function toast(html){
   clearTimeout(toastTimer); toastTimer = setTimeout(() => { t.hidden = true; }, 6000);
 }
 function promptText(i){
+  if (PROMPTS[i].fn) return PROMPTS[i].fn();
   return PROMPTS[i].x.replace(/\{\{(.+?)\}\}/g, (_, k) => (SLOTS[k] || '').trim() || '[' + k + ']');
 }
 function selectNode(el){
@@ -1092,8 +1510,10 @@ $('#views').innerHTML =
   `<div id="view-start">${viewStart()}</div>` +
   MODS.map(m => `<div id="view-${m.id}" hidden>${viewModule(m)}</div>`).join('') +
   `<div id="view-wrap" hidden>${viewWrap()}</div>`;
-$('#dock').innerHTML = `<span class="dock-h">실습 도구 바로가기</span>` + ['gemini','studio','notebook'].map(launch).join('');
+$('#dock').innerHTML = `<span class="dock-h">실습 도구 바로가기</span>` + ['gemini','studio','notebook'].map(k => launch(k)).join('');
 hydrate();
+hydrateAns();
+applyTopics();
 $$('.slot').forEach(sizeSlot);
 rssUpdate();
 
@@ -1110,13 +1530,17 @@ document.addEventListener('click', async e => {
   if (b.dataset.prompt){
     const i = +b.dataset.prompt, p = PROMPTS[i], ok = await copy(promptText(i));
     flash(b, ok);
-    if (ok) toast(`<span>복사했습니다. ${p.to ? TOOLS[p.to].name + ' 입력창에 붙여 넣습니다.' : '입력창에 붙여 넣습니다.'}</span>${p.to ? launch(p.to) : ''}`);
+    if (ok) toast(`<span>요청문을 복사했습니다.</span>${p.to ? launch(p.to) : ''}`);
     else { selectNode($('#ptext-' + i)); toast('<span>자동 복사가 막혀 있습니다. 요청문을 선택해 두었으니 Ctrl+C로 복사합니다.</span>'); }
   } else if (b.dataset.copy){
     flash(b, await copy(COPY[+b.dataset.copy]));
   } else if (b.dataset.expand){
     const el = document.getElementById(b.dataset.expand), open = el.classList.toggle('clip') === false;
     b.textContent = open ? '접기' : '전체 펼치기'; b.setAttribute('aria-expanded', String(open));
+  } else if (b.dataset.topic){
+    ANS['m6.topic'] = b.dataset.topic; saveAns(); applyTopics();
+  } else if (b.dataset.tfilter){
+    ANS['m6.filter'] = b.dataset.tfilter; saveAns(); applyTopics();
   } else if (b.dataset.kw){
     $('#rss-kw').value = b.dataset.kw; rssUpdate();
   } else if (b.dataset.act === 'copy-rss'){
@@ -1130,19 +1554,26 @@ document.addEventListener('click', async e => {
     if (mine.some(Boolean)) rows.push(mine);
     flash(b, await copy(rows.map(r => r.join('\t')).join('\n')));
   } else if (b.dataset.act === 'reset'){
-    if (b.dataset.armed){ store.clear(); hydrate(); refresh(); delete b.dataset.armed; b.textContent = '모두 지웠습니다'; setTimeout(() => { b.textContent = '진행 표시 모두 지우기'; }, 2000); }
+    if (b.dataset.armed){ store.clear(); ANS = Object.assign({}, ANS_DEFAULT); try{ localStorage.removeItem(ANS_KEY); }catch(err){} hydrate(); hydrateAns(); applyTopics(); refresh(); delete b.dataset.armed; b.textContent = '모두 지웠습니다'; setTimeout(() => { b.textContent = '진행 표시 모두 지우기'; }, 2000); }
     else { b.dataset.armed = '1'; b.textContent = '한 번 더 누르면 지워집니다'; setTimeout(() => { if (b.dataset.armed){ delete b.dataset.armed; b.textContent = '진행 표시 모두 지우기'; } }, 4000); }
   }
 });
 document.addEventListener('change', e => {
   const i = e.target;
+  if (i.dataset && i.dataset.ans){ onAns(i); return; }
   if (i.matches && i.matches('input[data-keep]')){
     if (i.checked) store.data[i.id] = 1; else delete store.data[i.id];
     store.save(); refresh();
   }
 });
+function onAns(el){
+  const k = el.dataset.ans; ANS[k] = el.value; saveAns();
+  $$('[data-ans]').forEach(o => { if (o !== el && o.dataset.ans === k) o.value = el.value; });
+  refreshDyn();
+}
 document.addEventListener('input', e => {
   const i = e.target;
+  if (i.dataset && i.dataset.ans){ onAns(i); return; }
   if (i.classList && i.classList.contains('slot')){
     SLOTS[i.dataset.slot] = i.value;
     $$('.slot').forEach(s => { if (s.dataset.slot === i.dataset.slot){ if (s !== i) s.value = i.value; sizeSlot(s); } });
